@@ -14,7 +14,7 @@
 
 ## 智能合约安全：水能载舟，亦能覆舟
 
-+ **🔗[Damn Vulnerable Defi 系列全解](https://)**
++ **🔗[Damn Vulnerable Defi 系列全解](https://github.com/DessertHeart/DiveIntoBlockchain/tree/main/safeBlockchain/DamnVulnerableDefi)**
 
 ## 公链底层开发：知己知彼，百战不殆
 

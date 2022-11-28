@@ -1,10 +1,9 @@
 ![](cover.png)
 
-**A set of challenges to learn offensive security of smart contracts in Ethereum.**
+**以太坊智能合约安全练习**
 
-Featuring flash loans, price oracles, governance, NFTs, lending pools, smart contract wallets, timelocks, and more!
-
-## Play
+## Try and Play
 
 Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
 
+## Figure Out

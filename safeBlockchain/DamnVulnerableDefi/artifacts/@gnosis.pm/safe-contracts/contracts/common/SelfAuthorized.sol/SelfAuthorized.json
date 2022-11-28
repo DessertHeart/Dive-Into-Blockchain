@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "SelfAuthorized",
+  "sourceName": "@gnosis.pm/safe-contracts/contracts/common/SelfAuthorized.sol",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220fa3390faee35c6506ba7ac090f8ca119599a10bfe65822ad0955b131c45a5cee64736f6c63430008070033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220fa3390faee35c6506ba7ac090f8ca119599a10bfe65822ad0955b131c45a5cee64736f6c63430008070033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

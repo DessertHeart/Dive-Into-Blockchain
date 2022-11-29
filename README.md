@@ -11,10 +11,13 @@
 ## 理论基础：精诚所至，金石为开
 
 + **🔗[深入浅出，入门以太坊开发生态](https://github.com)**
++ **🔗[深入以太坊，go-ethereum源码分析](https://github.com)**
 
 ## 智能合约安全：水能载舟，亦能覆舟
 
 + **🔗[Damn Vulnerable Defi 系列全解](https://github.com/DessertHeart/DiveIntoBlockchain/tree/main/safeBlockchain/DamnVulnerableDefi)**
++ **🔗[EVM puzzules 系列全解]()**
++ **🔗[chainflag 系列全解]()**
 
 ## 公链底层开发：知己知彼，百战不殆
 
@@ -22,4 +25,8 @@
 
 ## 智能合约应用：积跬步，以致千里
 
-+ **🔗[Flashloan：闪电贷](https://github.com)**
++ :zap:**闪电贷**
+  + **🔗[AAVE](https://github.com)**
+  + **🔗[UniswapV1](https://github.com)**
+  + **🔗[UniswapV2](https://github.com)**
+  + **🔗[UniswapV3](https://github.com)**

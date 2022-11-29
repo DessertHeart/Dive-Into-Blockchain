@@ -1,5 +1,4 @@
-+ ![](cover.png)
-
+![image](https://user-images.githubusercontent.com/93460127/204433577-99db069b-4962-4ebe-a582-a28090c36607.png)
   **:fire:内容：以太坊智能合约安全练习(包含Defi、NFT、Proxy等)**
 
   **:computer:技术栈要求：Solidity & Javascript**

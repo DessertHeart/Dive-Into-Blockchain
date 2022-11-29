@@ -4,8 +4,21 @@
 
 **:computer:技术栈要求：Solidity & Javascript**
 
-## Try and Play
+## Playground
 
 Visit [damnvulnerabledefi.xyz](https://damnvulnerabledefi.xyz)
 
-## Figure Out
+## Resolutions
++ :one:  [Unstoppable]()
++ :two:	 [Naive receiver]()
++ :three:	 [Truster]()
++ :four:	 [Side entrance]()
++ :five:	 [The rewarder]()
++ :six:	 [Selfie]()
++ :seven:	 [Compromised]()
++ :eight:	 [Puppet]()
++ :nine:	 [Puppet v2]()
++ :one::zero:	 [Free rider]()
++ :one::one:	 [Backdoor]()
++ :one::two:	 [Climber]()
++ :one::three:	 [Safe miners]()

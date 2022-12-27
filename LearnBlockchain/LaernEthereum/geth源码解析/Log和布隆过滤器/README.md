@@ -5,33 +5,33 @@
 ```go
 // core/types/log.go
 type Log struct {
-	// 1、consensus层结构
-	// 发出日志事件的合约地址
-	Address common.Address `json:"address" gencodec:"required"`
-	// 最多可以有 4 个主题(topic)。每个主题正好是 32 个字节
+  // 1、consensus层结构
+  // 发出日志事件的合约地址
+  Address common.Address `json:"address" gencodec:"required"`
+  // 最多可以有 4 个主题(topic)。每个主题正好是 32 个字节
   // Solidity 将一个主题用作事件的签名
   // 注意：如 string 和 bytes 可能超过 32 个字节
   // 如果它们被索引，Solidity 将存储 KECCAK256的哈希值，而不是实际数据。
-	Topics []common.Hash `json:"topics" gencodec:"required"`
-	// data是事件的有效负载(payload), 可以是任意数量的字节 
+  Topics []common.Hash `json:"topics" gencodec:"required"`
+  // data是事件的有效负载(payload), 可以是任意数量的字节 
   // 通过 ABI-encoded 编码
   // 事件的所有“非索引参数”都存储为数据。
-	Data []byte `json:"data" gencodec:"required"`
+  Data []byte `json:"data" gencodec:"required"`
 
-	// 2、节点代码层面所用的衍生结构
-	// 交易所在的区块号
-	BlockNumber uint64 `json:"blockNumber"`
-	// log所在的交易哈希
-	TxHash common.Hash `json:"transactionHash" gencodec:"required"`
-	// 交易在区块中的索引
-	TxIndex uint `json:"transactionIndex"`
-	// 包含这个log的交易被包含在的区块哈希
-	BlockHash common.Hash `json:"blockHash"`
-	// log在区块中的索引
-	Index uint `json:"logIndex"`
+  // 2、节点代码层面所用的衍生结构
+  // 交易所在的区块号
+  BlockNumber uint64 `json:"blockNumber"`
+  // log所在的交易哈希
+  TxHash common.Hash `json:"transactionHash" gencodec:"required"`
+  // 交易在区块中的索引
+  TxIndex uint `json:"transactionIndex"`
+  // 包含这个log的交易被包含在的区块哈希
+  BlockHash common.Hash `json:"blockHash"`
+  // log在区块中的索引
+  Index uint `json:"logIndex"`
 
   // 判断是否包含此log的区块被reorg以至于Log reverted
-	Removed bool `json:"removed"`
+  Removed bool `json:"removed"`
 }
 
 ```

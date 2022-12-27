@@ -8,7 +8,7 @@
 
 通过节点维护运行，以太坊网络是一个去中心化状态机。在任意时刻，只会处于一个全世界唯一的状态，我们把这个状态机，称之为以太坊世界状态，代表着以太坊网络的全局状态。
 
-**世界状态(state)**由无数的账户信息组成，每个账户均存在一个唯一的账户信息。账户信息中存储着账户余额、Nonce、合约哈希、账户状态等内容，每个账户信息通过账户地址影射。 从创世状态开始，随着将交易作为输入信息，在预设协议标准（条件）下将世界态推进到下一个新的状态中。
+世界状态(state)由无数的账户信息组成，每个账户均存在一个唯一的账户信息。账户信息中存储着账户余额、Nonce、合约哈希、账户状态等内容，每个账户信息通过账户地址影射。 从创世状态开始，随着将交易作为输入信息，在预设协议标准（条件）下将世界态推进到下一个新的状态中。
 
 ![以太坊技术与实现-状态](https://img.learnblockchain.cn/book_geth/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0-%E5%9B%BE2019-12-7-23-35-20!de?width=600px)
 
@@ -40,17 +40,17 @@ StateDB是EVM State中最高层的封装，直接提供了与StateObject (Accoun
 // core/state/database.go
 type Database interface {
   // 打开指定状态版本(root)的含state trie
-	OpenTrie(root common.Hash) (Trie, error)
+  OpenTrie(root common.Hash) (Trie, error)
   // 打开账户(addrHash)下指定状态版本(root)的Account storage trie。
-	OpenStorageTrie(addrHash, root common.Hash) (Trie, error)
+  OpenStorageTrie(addrHash, root common.Hash) (Trie, error)
   // 深度拷贝树
-	CopyTrie(Trie) Trie
+  CopyTrie(Trie) Trie
   // 获取账户（addrHash）的合约，必须和合约哈希`codeHash`匹配
-	ContractCode(addrHash, codeHash common.Hash) ([]byte, error)
+  ContractCode(addrHash, codeHash common.Hash) ([]byte, error)
   // 获取指定合约大小
-	ContractCodeSize(addrHash, codeHash common.Hash) (int, error)
-	// 获得 Trie 底层的数据驱动 DB，如: levedDB 、内存数据库、远程数据库
-	TrieDB() *trie.Database
+  ContractCodeSize(addrHash, codeHash common.Hash) (int, error)
+  // 获得 Trie 底层的数据驱动 DB，如: levedDB 、内存数据库、远程数据库
+  TrieDB() *trie.Database
 }
 ```
 
@@ -61,16 +61,16 @@ type Database interface {
 func New(root common.Hash, db Database, snaps *snapshot.Tree) (*StateDB, error) {
   // 1.trie: 打开指定状态版本(root)的含世界状态的顶层树
   tr, err := db.OpenTrie(root)
-	......
+  ......
   // 2.初始化stateDB
-	sdb := &StateDB{
-    // key point1： database
-		db:                  db,
-    // key point2： trie
-		trie:                tr,
-		......
-	}
-	......
+  sdb := &StateDB{
+  // key point1： database
+  db:                  db,
+  // key point2： trie
+  trie:                tr,
+  ......
+  }
+  ......
 }
 ```
 
@@ -87,7 +87,7 @@ func New(root common.Hash, db Database, snaps *snapshot.Tree) (*StateDB, error) 
 ```go
 // core/state/statedb.go
 func (s *StateDB) Commit(deleteEmptyObjects bool) (common.Hash, error) {
-	......
+  ......
 }
 
 ```
@@ -133,26 +133,26 @@ MPT = Merkle Tree(节点存储数据块的哈希) + Patricia Trie（压缩前缀
 
     其中的一个必要优化手段是HP Key：hex prefix encoding，Hex 前缀编码。当我们使用 nibble 寻找路径时，我们可能最后会剩下奇数个的 nibble，但是由于数据存储的最小单位是字节，所以可能会带来一些歧义，比如我们可能无法区分 1 或 01（都存储为1字节`01`）。因此，为了区分奇偶长度，叶子节点和拓展节点的 encodedPath 使用一个前缀作为标签，另外，这个标签也用于区分节点类型。
 
-> **nibble**：占4bits ，一位十六进制数即半字节。为HP编码中hex用到的数据结构单位，可以表示数字 0~15，这一步可以看成是将 key 映射到十六进制字符 0~f 组成的字符串，这就是为什么分支节点的数组长度为 17（16+1）
+> **nibble**：占4bits ，一位十六进制数即半字节。为HP编码中hex用到的数据结构单位，可以表示数字 0-15，这一步可以看成是将 key 映射到十六进制字符 0-f 组成的字符串，这就是为什么分支节点的数组长度为 17（16+1）
 
 ![img](https://img-blog.csdnimg.cn/888b0ba0ef994b7cad561b43262b3a62.png)
 
 ```go
 // trie/trie.go
 type Trie struct {
-	root  node
-	owner common.Hash
+  root  node
+  owner common.Hash
 
-	// 记录从上次哈希操作至今，插入叶子结点leaves叶数量
-	unhashed int
+  // 记录从上次哈希操作至今，插入叶子结点leaves叶数量
+  unhashed int
 
-	// 检索trie各节点的handler trie工具
-	reader *trieReader
+  // 检索trie各节点的handler trie工具
+  reader *trieReader
 
-	// tracing trie变更的工具, 一个调用合约的交易在执行过程中，可能会改变很多state variable，
+  // tracing trie变更的工具, 一个调用合约的交易在执行过程中，可能会改变很多state variable，
   // 它每一步具体都改变了什么，都在trace中记录
-	// 每次commit操作会重置
-	tracer *tracer
+  // 每次commit操作会重置
+  tracer *tracer
 }
 ```
 
@@ -161,17 +161,17 @@ type Trie struct {
 ```go
 // core/state/database.go
 type Trie interface {
-	GetKey([]byte) []byte
-	TryGet(key []byte) ([]byte, error)
-	TryGetAccount(key []byte) (*types.StateAccount, error)
-	TryUpdate(key, value []byte) error
-	TryUpdateAccount(key []byte, account *types.StateAccount) error
-	TryDelete(key []byte) error
-	TryDeleteAccount(key []byte) error
-	Hash() common.Hash
-	Commit(collectLeaf bool) (common.Hash, *trie.NodeSet, error)
-	NodeIterator(startKey []byte) trie.NodeIterator
-	Prove(key []byte, fromLevel uint, proofDb ethdb.KeyValueWriter) error
+  GetKey([]byte) []byte
+  TryGet(key []byte) ([]byte, error)
+  TryGetAccount(key []byte) (*types.StateAccount, error)
+  TryUpdate(key, value []byte) error
+  TryUpdateAccount(key []byte, account *types.StateAccount) error
+  TryDelete(key []byte) error
+  TryDeleteAccount(key []byte) error
+  Hash() common.Hash
+  Commit(collectLeaf bool) (common.Hash, *trie.NodeSet, error)
+  NodeIterator(startKey []byte) trie.NodeIterator
+  Prove(key []byte, fromLevel uint, proofDb ethdb.KeyValueWriter) error
 }
 ```
 

@@ -22,33 +22,33 @@ type Block struct {
 }
 
 type Header struct {
-	ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
-	UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
-	Coinbase    common.Address `json:"miner"`
-	Root        common.Hash    `json:"stateRoot"        gencodec:"required"`
-	TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`
-	ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`
-	Bloom       Bloom          `json:"logsBloom"        gencodec:"required"`
-	Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"`
-	Number      *big.Int       `json:"number"           gencodec:"required"`
-	GasLimit    uint64         `json:"gasLimit"         gencodec:"required"`
-	GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`
-	Time        uint64         `json:"timestamp"        gencodec:"required"`
-	Extra       []byte         `json:"extraData"        gencodec:"required"`
-	MixDigest   common.Hash    `json:"mixHash"`
-	Nonce       BlockNonce     `json:"nonce"`
+  ParentHash  common.Hash    `json:"parentHash"       gencodec:"required"`
+  UncleHash   common.Hash    `json:"sha3Uncles"       gencodec:"required"`
+  Coinbase    common.Address `json:"miner"`
+  Root        common.Hash    `json:"stateRoot"        gencodec:"required"`
+  TxHash      common.Hash    `json:"transactionsRoot" gencodec:"required"`
+  ReceiptHash common.Hash    `json:"receiptsRoot"     gencodec:"required"`
+  Bloom       Bloom          `json:"logsBloom"        gencodec:"required"`
+  Difficulty  *big.Int       `json:"difficulty"       gencodec:"required"`
+  Number      *big.Int       `json:"number"           gencodec:"required"`
+  GasLimit    uint64         `json:"gasLimit"         gencodec:"required"`
+  GasUsed     uint64         `json:"gasUsed"          gencodec:"required"`
+  Time        uint64         `json:"timestamp"        gencodec:"required"`
+  Extra       []byte         `json:"extraData"        gencodec:"required"`
+  MixDigest   common.Hash    `json:"mixHash"`
+  Nonce       BlockNonce     `json:"nonce"`
 
-	// EIP-1559
-	BaseFee *big.Int `json:"baseFeePerGas" rlp:"optional"`
+  // EIP-1559
+  BaseFee *big.Int `json:"baseFeePerGas" rlp:"optional"`
 }
 
 type Body struct {
-	Transactions []*Transaction
-	Uncles       []*Header
+  Transactions []*Transaction
+  Uncles       []*Header
 }
 ```
 
-**"链"**指的是每个区块加密引用其父块。 换句话说，区块被单向链接在一起。 在不改变所有后续区块的情况下，区块内数据是无法改变，但改变后续区块需要整个网络的共识。
+"链"指的是每个区块加密引用其父块。 换句话说，区块被单向链接在一起。 在不改变所有后续区块的情况下，区块内数据是无法改变，但改变后续区块需要整个网络的共识。
 
 > **分叉fork**：指的是出现了两条互相竞争的链，出现这种不正常的情况后，区块链要依照某种方式选择一条作为canonical chain，即唯一正确的链。**解决 - LMD-GHOST 分叉选择算法**
 >
@@ -59,38 +59,38 @@ type Body struct {
 ```go
 // core/blockchain.go
 type BlockChain struct {
-	chainConfig *params.ChainConfig // 链和网络的基本配置
-	cacheConfig *CacheConfig        // 节点代码裁剪缓存
+  chainConfig *params.ChainConfig // 链和网络的基本配置
+  cacheConfig *CacheConfig        // 节点代码裁剪缓存
 
-	db         ethdb.Database // levelDB物理存储，数据持久化
-	snaps      *snapshot.Tree // Snapshot tree for fast trie leaf access
-	triegc     *prque.Prque   // Priority queue mapping block numbers to tries to gc
-	gcproc     time.Duration  // Accumulates canonical block processing for trie dumping
-	triedb     *trie.Database // trieDB,存储trie
-	stateCache state.Database // 世界状态State database
+  db         ethdb.Database // levelDB物理存储，数据持久化
+  snaps      *snapshot.Tree // Snapshot tree for fast trie leaf access
+  triegc     *prque.Prque   // Priority queue mapping block numbers to tries to gc
+  gcproc     time.Duration  // Accumulates canonical block processing for trie dumping
+  triedb     *trie.Database // trieDB,存储trie
+  stateCache state.Database // 世界状态State database
 
-	// 可索引追溯得到的最大区块范围
-	//  * 0:   means no limit and regenerate any missing indexes
-	//  * N:   means N block limit [HEAD-N+1, HEAD] and delete extra indexes
-	//  * nil: disable tx reindexer/deleter, but still index new blocks
-	txLookupLimit uint64
+  // 可索引追溯得到的最大区块范围
+  //  * 0:   means no limit and regenerate any missing indexes
+  //  * N:   means N block limit [HEAD-N+1, HEAD] and delete extra indexes
+  //  * nil: disable tx reindexer/deleter, but still index new blocks
+  txLookupLimit uint64
 
   // chain header：负责特殊的数据维护，每次加入一个新的block都会判断
   // validator们根据自己当前看到的场景，来判断哪个block是beacon chain头的过程
   // 包括: (1) total difficulty (2) header (3) block hash -> number mapping 
   // (4) canonical number -> hash mapping (5) head header flag.
-	hc            *HeaderChain
+  hc            *HeaderChain
   
   // Feed: channel实现的一对多的订阅式消息分发结构
-	rmLogsFeed    event.Feed
-	chainFeed     event.Feed
-	chainSideFeed event.Feed
-	chainHeadFeed event.Feed
-	logsFeed      event.Feed
-	blockProcFeed event.Feed
-	scope         event.SubscriptionScope
-	genesisBlock  *types.Block
-	......
+  rmLogsFeed    event.Feed
+  chainFeed     event.Feed
+  chainSideFeed event.Feed
+  chainHeadFeed event.Feed
+  logsFeed      event.Feed
+  blockProcFeed event.Feed
+  scope         event.SubscriptionScope
+  genesisBlock  *types.Block
+  ......
 }
 ```
 

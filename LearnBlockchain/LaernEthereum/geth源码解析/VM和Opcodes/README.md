@@ -44,21 +44,21 @@ Ethereum Virtual Machine 是所有以太坊帐户和智能合约依存的环境�
   // core/vm/stack.go
   // 实现了push、pop、dup、peek查看栈顶元素等方法
   var stackPool = sync.Pool{
-  	New: func() interface{} {
-      // 使用切片，初始化堆栈空间深度为 256B * 16
-      // 不同于以前直接分配1024深度的定长数组，优化内存分配
-  		return &Stack{data: make([]uint256.Int, 0, 16)}
-  	},
+  New: func() interface{} {
+    // 使用切片，初始化堆栈空间深度为 256B * 16
+    // 不同于以前直接分配1024深度的定长数组，优化内存分配
+	return &Stack{data: make([]uint256.Int, 0, 16)}
+    },
   }
   
   
   type Stack struct {
     // package uint256：type Int [4]uint64
-  	data []uint256.Int
+    data []uint256.Int
   }
   
   func newstack() *Stack {
-  	return stackPool.Get().(*Stack)
+    return stackPool.Get().(*Stack)
   }
   ```
 
@@ -69,13 +69,13 @@ Ethereum Virtual Machine 是所有以太坊帐户和智能合约依存的环境�
   // 实现了Resize分配空间、Set设置值、Get取值等方法
   type Memory struct {
     // 1B位宽，无线长度切片
-  	store       []byte
-  	lastGasCost uint64
+    store       []byte
+    lastGasCost uint64
   }
   
   // NewMemory returns a new memory model.
   func NewMemory() *Memory {
-  	return &Memory{}
+    return &Memory{}
   }
   
   ```
@@ -85,26 +85,26 @@ EVM的数据结构与初始化：
 ```go
 // core/vm/evm.go
 type EVM struct {
-	// 提供一些区块链信息辅助context
-	Context BlockContext
-	TxContext
-	// StateDB状态存储的接口，EVM大部分工作都是围绕其展开
-	StateDB StateDB
-	// 记录当前调用栈深度
-	depth int
+  // 提供一些区块链信息辅助context
+  Context BlockContext
+  TxContext
+  // StateDB状态存储的接口，EVM大部分工作都是围绕其展开
+  StateDB StateDB
+  // 记录当前调用栈深度
+  depth int
 
-	// 记录链配置, 因为以太坊经历过几次的提案分叉，所以做了一些兼容
-	chainConfig *params.ChainConfig
-	// 标识符，判断链规则（同上原因）
-	chainRules params.Rules
-	// VM的配置，用于初始化
-	Config Config
-	// EVM解释器对象，它是整个VM执行代码、处理交易的地方
-	interpreter *EVMInterpreter
-	// 用于终止代码执行
-	abort int32
-	// 用于存储当前调用的gas可用值
-	callGasTemp uint64
+  // 记录链配置, 因为以太坊经历过几次的提案分叉，所以做了一些兼容
+  chainConfig *params.ChainConfig
+  // 标识符，判断链规则（同上原因）
+  chainRules params.Rules
+  // VM的配置，用于初始化
+  Config Config
+  // EVM解释器对象，它是整个VM执行代码、处理交易的地方
+  interpreter *EVMInterpreter
+  // 用于终止代码执行
+  abort int32
+  // 用于存储当前调用的gas可用值
+  callGasTemp uint64
 }
 
 func NewEVM(blockCtx BlockContext, txCtx TxContext, statedb StateDB, chainConfig *params.ChainConfig, config Config) *EVM {
@@ -116,7 +116,7 @@ func NewEVM(blockCtx BlockContext, txCtx TxContext, statedb StateDB, chainConfig
       chainConfig: chainConfig,
       chainRules:  chainConfig.Rules(blockCtx.BlockNumber, blockCtx.Random != nil),
     }
-  	// 重点是创建解释器，解释器是执行字节码的关键
+    // 重点是创建解释器，解释器是执行字节码的关键
     evm.interpreter = NewEVMInterpreter(evm, config)
     return evm
 }
@@ -127,52 +127,52 @@ EVM解释器Interpreter的创建初始化流程，主要是对Opcodes根据不�
 ```go
 // core/vm/interpreter.go
 func NewEVMInterpreter(evm *EVM, cfg Config) *EVMInterpreter {
-	// 设置操作码对应的函数 
+  // 设置操作码对应的函数 
   // JumpTable即管理着EVM opcodes
   // 同样因为以太坊经历版本迭代之后，操作码有了一些变化，所以有多个情况
-	if cfg.JumpTable == nil {
-		switch {
-		case evm.chainRules.IsMerge:
-			cfg.JumpTable = &mergeInstructionSet
-		case evm.chainRules.IsLondon:
-			cfg.JumpTable = &londonInstructionSet
-		case evm.chainRules.IsBerlin:
-			cfg.JumpTable = &berlinInstructionSet
-		case evm.chainRules.IsIstanbul:
-			cfg.JumpTable = &istanbulInstructionSet
-		case evm.chainRules.IsConstantinople:
-			cfg.JumpTable = &constantinopleInstructionSet
-		case evm.chainRules.IsByzantium:
-			cfg.JumpTable = &byzantiumInstructionSet
-		case evm.chainRules.IsEIP158:
-			cfg.JumpTable = &spuriousDragonInstructionSet
-		case evm.chainRules.IsEIP150:
-			cfg.JumpTable = &tangerineWhistleInstructionSet
-		case evm.chainRules.IsHomestead:
-			cfg.JumpTable = &homesteadInstructionSet
-		default:
-			cfg.JumpTable = &frontierInstructionSet
-		}
-		var extraEips []int
-		if len(cfg.ExtraEips) > 0 {
-			// Deep-copy jumptable to prevent modification of opcodes in other tables
-			cfg.JumpTable = copyJumpTable(cfg.JumpTable)
-		}
-		for _, eip := range cfg.ExtraEips {
-			if err := EnableEIP(eip, cfg.JumpTable); err != nil {
-				// Disable it, so caller can check if it's activated or not
-				log.Error("EIP activation failed", "eip", eip, "error", err)
-			} else {
-				extraEips = append(extraEips, eip)
-			}
-		}
-		cfg.ExtraEips = extraEips
-	}
+  if cfg.JumpTable == nil {
+	  switch {
+	  case evm.chainRules.IsMerge:
+		  cfg.JumpTable = &mergeInstructionSet
+	  case evm.chainRules.IsLondon:
+		  cfg.JumpTable = &londonInstructionSet
+	  case evm.chainRules.IsBerlin:
+		  cfg.JumpTable = &berlinInstructionSet
+	  case evm.chainRules.IsIstanbul:
+		  cfg.JumpTable = &istanbulInstructionSet
+	  case evm.chainRules.IsConstantinople:
+		  cfg.JumpTable = &constantinopleInstructionSet
+	  case evm.chainRules.IsByzantium:
+		  cfg.JumpTable = &byzantiumInstructionSet
+	  case evm.chainRules.IsEIP158:
+		  cfg.JumpTable = &spuriousDragonInstructionSet
+	  case evm.chainRules.IsEIP150:
+		  cfg.JumpTable = &tangerineWhistleInstructionSet
+	  case evm.chainRules.IsHomestead:
+		  cfg.JumpTable = &homesteadInstructionSet
+	  default:
+		  cfg.JumpTable = &frontierInstructionSet
+	  }
+	  var extraEips []int
+	  if len(cfg.ExtraEips) > 0 {
+		  // Deep-copy jumptable to prevent modification of opcodes in other tables
+		  cfg.JumpTable = copyJumpTable(cfg.JumpTable)
+	  }
+	  for _, eip := range cfg.ExtraEips {
+		  if err := EnableEIP(eip, cfg.JumpTable); err != nil {
+			  // Disable it, so caller can check if it's activated or not
+			  log.Error("EIP activation failed", "eip", eip, "error", err)
+		  } else {
+			  extraEips = append(extraEips, eip)
+		  }
+	  }
+	  cfg.ExtraEips = extraEips
+  }
 
-	return &EVMInterpreter{
-		evm: evm,
-		cfg: cfg,
-	}
+  return &EVMInterpreter{
+	  evm: evm,
+	  cfg: cfg,
+  }
 }
 ```
 
@@ -184,28 +184,28 @@ Ethereum的虚拟机源码所有部分在core/vm下。EVM的调用的入口在`c
 // StateTransition 是当一笔交易应用于当前的世界状态时所产生的一个“变化change”
 // 负责完成所有状态变化所对应的步骤，并最终生成新的 state trie root
 func (st *StateTransition) TransitionDb() (*ExecutionResult, error) {
-	......
+  ......
   // evm的入口
   // contractCreation = msg.To() == nil
   // 即如果交易的接受者为0地址，则判断为合约创建类型
-	if contractCreation {
+  if contractCreation {
     // evm.Create()
     // 合约部署的 Code 同样通过transaction的data字段传入
     // data的构造包括：部署代码 (creation code)、合约代码 (runtime code)、(可选)辅助数据 (Auxdata)
     // demo：https://github.com/AmazingAng/WTF-		          Solidity/blob/main/Topics/Translation/DiveEVM2017/DiveEVM2017-Part5.md
-		ret, _, st.gas, vmerr = st.evm.Create(sender, st.data, st.gas, st.value)
-	} else {
-		// 增加nonce值（防止重放攻击），为下一笔交易做准备
-		st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+	  ret, _, st.gas, vmerr = st.evm.Create(sender, st.data, st.gas, st.value)
+  } else {
+    // 增加nonce值（防止重放攻击），为下一笔交易做准备
+    st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
     // evm.Call()
-		ret, st.gas, vmerr = st.evm.Call(sender, st.to(), st.data, st.gas, st.value)
-	}
-	......
-	return &ExecutionResult{
-		UsedGas:    st.gasUsed(),
-		Err:        vmerr,
-		ReturnData: ret,
-	}, nil
+    ret, st.gas, vmerr = st.evm.Call(sender, st.to(), st.data, st.gas, st.value)
+  }
+  ......
+  return &ExecutionResult{
+	  UsedGas:    st.gasUsed(),
+	  Err:        vmerr,
+	  ReturnData: ret,
+  }, nil
 }
 ```
 
@@ -223,99 +223,99 @@ func (st *StateTransition) TransitionDb() (*ExecutionResult, error) {
   
   // EVM通过运行creation code部署并初始化合约，把runtime的合约代码返回并设置到合约地址
   func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64, value *big.Int, address common.Address, typ OpCode) ([]byte, common.Address, uint64, error) {
-  	// 检测当前evm执行的深度，默认不应该超过1024
-  	if evm.depth > int(params.CallCreateDepth) {
-  		return nil, common.Address{}, gas, ErrDepth
-  	}
+    // 检测当前evm执行的深度，默认不应该超过1024
+    if evm.depth > int(params.CallCreateDepth) {
+  	  return nil, common.Address{}, gas, ErrDepth
+    }
     // 检测是否调用方的金额大约value
-  	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
-  		return nil, common.Address{}, gas, ErrInsufficientBalance
-  	}
+    if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
+  	  return nil, common.Address{}, gas, ErrInsufficientBalance
+    }
     // 首先获取调用者的nonce，然后nonce+1
-  	nonce := evm.StateDB.GetNonce(caller.Address())
-  	if nonce+1 < nonce {
-  		return nil, common.Address{}, gas, ErrNonceUintOverflow
-  	}
-  	evm.StateDB.SetNonce(caller.Address(), nonce+1)
-  	// contract address加入到access list
-  	// 这个行为不需要也不该被回滚
-  	if evm.chainRules.IsBerlin {
-  		evm.StateDB.AddAddressToAccessList(address)
-  	}
-  	// 确定指定的合约地址是唯一的
-  	contractHash := evm.StateDB.GetCodeHash(address)
-  	if evm.StateDB.GetNonce(address) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) {
-  		return nil, common.Address{}, 0, ErrContractAddressCollision
-  	}
-  	// 为合约地址在世界状态上层封装的stateDB中创建账户体系
-  	snapshot := evm.StateDB.Snapshot()
-  	evm.StateDB.CreateAccount(address)
-  	if evm.chainRules.IsEIP158 {
-  		evm.StateDB.SetNonce(address, 1)
-  	}
-  	evm.Context.Transfer(evm.StateDB, caller.Address(), address, value)
+    nonce := evm.StateDB.GetNonce(caller.Address())
+    if nonce+1 < nonce {
+  	  return nil, common.Address{}, gas, ErrNonceUintOverflow
+    }
+    evm.StateDB.SetNonce(caller.Address(), nonce+1)
+    // contract address加入到access list
+    // 这个行为不需要也不该被回滚
+    if evm.chainRules.IsBerlin {
+  	  evm.StateDB.AddAddressToAccessList(address)
+    }
+    // 确定指定的合约地址是唯一的
+    contractHash := evm.StateDB.GetCodeHash(address)
+    if evm.StateDB.GetNonce(address) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) {
+  	  return nil, common.Address{}, 0, ErrContractAddressCollision
+    }
+    // 为合约地址在世界状态上层封装的stateDB中创建账户体系
+    snapshot := evm.StateDB.Snapshot()
+    evm.StateDB.CreateAccount(address)
+    if evm.chainRules.IsEIP158 {
+  	  evm.StateDB.SetNonce(address, 1)
+    }
+    evm.Context.Transfer(evm.StateDB, caller.Address(), address, value)
   
     // 创建一个合约对象，并设置合约对象的参数，比如runtime code等
     // 参照core/vm/contract.go，contract代表以太坊stateDB里面的一个合约对象
-  	contract := NewContract(caller, AccountRef(address), value, gas)
-  	contract.SetCodeOptionalHash(&address, codeAndHash)
+    contract := NewContract(caller, AccountRef(address), value, gas)
+    contract.SetCodeOptionalHash(&address, codeAndHash)
   
-  	if evm.Config.Debug {
-  		if evm.depth == 0 {
-  			evm.Config.Tracer.CaptureStart(evm, caller.Address(), address, true, codeAndHash.code, gas, value)
-  		} else {
-  			evm.Config.Tracer.CaptureEnter(typ, caller.Address(), address, codeAndHash.code, gas, value)
-  		}
-  	}
+    if evm.Config.Debug {
+  	  if evm.depth == 0 {
+  		  evm.Config.Tracer.CaptureStart(evm, caller.Address(), address, true, codeAndHash.code, gas, value)
+  	  } else {
+  		  evm.Config.Tracer.CaptureEnter(typ, caller.Address(), address, codeAndHash.code, gas, value)
+  	  }
+    }
   
-  	start := time.Now()
+    start := time.Now()
     // 核心：将合约对象传入解释器Run函数开始执行
     // 该函数为真正执行合约代码的地方
     // evm.Call()入口进入的时候最终也会调用此函数
-  	ret, err := evm.interpreter.Run(contract, nil, false)
+    ret, err := evm.interpreter.Run(contract, nil, false)
   
     // 下面的流程主要是一些协议检查
-  	// Check whether the max code size has been exceeded, assign err if the case.
-  	if err == nil && evm.chainRules.IsEIP158 && len(ret) > params.MaxCodeSize {
-  		err = ErrMaxCodeSizeExceeded
-  	}
+    // Check whether the max code size has been exceeded, assign err if the case.
+    if err == nil && evm.chainRules.IsEIP158 && len(ret) > params.MaxCodeSize {
+  	  err = ErrMaxCodeSizeExceeded
+    }
   
-  	// Reject code starting with 0xEF if EIP-3541 is enabled.
-  	if err == nil && len(ret) >= 1 && ret[0] == 0xEF && evm.chainRules.IsLondon {
-  		err = ErrInvalidCode
-  	}
+    // Reject code starting with 0xEF if EIP-3541 is enabled.
+    if err == nil && len(ret) >= 1 && ret[0] == 0xEF && evm.chainRules.IsLondon {
+  	  err = ErrInvalidCode
+    }
   
     // 如果creationCode执行成功，则在stateDB中把返回的字节码（runtime code）
     // 保存到此合约账户(上面创建的)名下，这样之后调用合约代码才能加载成功
-  	// If the code could not
-  	// be stored due to not enough gas set an error and let it be handled
-  	// by the error checking condition below.
-  	if err == nil {
-  		createDataGas := uint64(len(ret)) * params.CreateDataGas
-  		if contract.UseGas(createDataGas) {
-  			evm.StateDB.SetCode(address, ret)
-  		} else {
-  			err = ErrCodeStoreOutOfGas
-  		}
-  	}
+    // If the code could not
+    // be stored due to not enough gas set an error and let it be handled
+    // by the error checking condition below.
+    if err == nil {
+  	  createDataGas := uint64(len(ret)) * params.CreateDataGas
+  	  if contract.UseGas(createDataGas) {
+  		  evm.StateDB.SetCode(address, ret)
+  	  } else {
+  		  err = ErrCodeStoreOutOfGas
+  	  }
+    }
   
-  	// 如果发生任何错误，revert世界状态state至改变之前（通过snapshot）
+    // 如果发生任何错误，revert世界状态state至改变之前（通过snapshot）
     // 如果err不是ErrExecutionReverted错误，则消耗掉所有gas
-  	if err != nil && (evm.chainRules.IsHomestead || err != ErrCodeStoreOutOfGas) {
-  		evm.StateDB.RevertToSnapshot(snapshot)
-  		if err != ErrExecutionReverted {
-  			contract.UseGas(contract.Gas)
-  		}
-  	}
+    if err != nil && (evm.chainRules.IsHomestead || err != ErrCodeStoreOutOfGas) {
+  	  evm.StateDB.RevertToSnapshot(snapshot)
+  	  if err != ErrExecutionReverted {
+  		  contract.UseGas(contract.Gas)
+  	  }
+    }
   
-  	if evm.Config.Debug {
-  		if evm.depth == 0 {
-  			evm.Config.Tracer.CaptureEnd(ret, gas-contract.Gas, time.Since(start), err)
-  		} else {
-  			evm.Config.Tracer.CaptureExit(ret, gas-contract.Gas, err)
-  		}
-  	}
-  	return ret, address, contract.Gas, err
+    if evm.Config.Debug {
+  	  if evm.depth == 0 {
+  		  evm.Config.Tracer.CaptureEnd(ret, gas-contract.Gas, time.Since(start), err)
+  	  } else {
+  		  evm.Config.Tracer.CaptureExit(ret, gas-contract.Gas, err)
+  	  }
+    }
+    return ret, address, contract.Gas, err
   }
   ```
 
@@ -325,110 +325,110 @@ func (st *StateTransition) TransitionDb() (*ExecutionResult, error) {
   // 除了ErrExecutionReverted（solidity：revert）错误会返还gas剩余给caller
   // 其他解释器返回的错误都视为revert-and-consume-all-gas
   func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (ret []byte, err error) {
-  	// 增加1堆栈深度，最大1024
-  	in.evm.depth++
-  	defer func() { in.evm.depth-- }()
+    // 增加1堆栈深度，最大1024
+    in.evm.depth++
+    defer func() { in.evm.depth-- }()
     ......
     // 下面的变量满足了一个字节码执行的所有条件
     // 有操作码、内存、栈、PC程序计数器 
     // debug工具是用于跟踪执行的流程状态，运行时建议使用
-  	var (
-  		op          OpCode        // current opcode
-  		mem         = NewMemory() // bound memory
-  		stack       = newstack()  // local stack
-  		callContext = &ScopeContext{
-  			Memory:   mem,
-  			Stack:    stack,
-  			Contract: contract,
-  		}
-  		// For optimisation reason we're using uint64 as the program counter.
-  		// It's theoretically possible to go above 2^64. The YP defines the PC
-  		// to be uint256. Practically much less so feasible.
-  		pc   = uint64(0) // program counter
-  		cost uint64
-  		// copies used by tracer
-  		pcCopy  uint64 // needed for the deferred EVMLogger
-  		gasCopy uint64 // for EVMLogger to log gas remaining before execution
-  		logged  bool   // deferred EVMLogger should ignore already logged steps
-  		res     []byte // opcode执行函数返回的结果
+    var (
+  	  op          OpCode        // current opcode
+  	  mem         = NewMemory() // bound memory
+  	  stack       = newstack()  // local stack
+  	  callContext = &ScopeContext{
+  		  Memory:   mem,
+  		  Stack:    stack,
+  		  Contract: contract,
+  	  }
+  	  // For optimisation reason we're using uint64 as the program counter.
+  	  // It's theoretically possible to go above 2^64. The YP defines the PC
+  	  // to be uint256. Practically much less so feasible.
+  	  pc   = uint64(0) // program counter
+  	  cost uint64
+  	  // copies used by tracer
+  	  pcCopy  uint64 // needed for the deferred EVMLogger
+  	  gasCopy uint64 // for EVMLogger to log gas remaining before execution
+  	  logged  bool   // deferred EVMLogger should ignore already logged steps
+  	  res     []byte // opcode执行函数返回的结果
   	)
-  	// Don't move this deferred function, it's placed before the capturestate-deferred method,
-  	// so that it get's executed _after_: the capturestate needs the stacks before
-  	// they are returned to the pools
-  	defer func() {
-  		returnStack(stack)
-  	}()
-  	contract.Input = input
-  	......
-  	// 解释器执行opcodes的入口loop
+    // Don't move this deferred function, it's placed before the capturestate-deferred method,
+    // so that it get's executed _after_: the capturestate needs the stacks before
+    // they are returned to the pools
+    defer func() {
+  	 returnStack(stack)
+    }()
+    contract.Input = input
+    ......
+    // 解释器执行opcodes的入口loop
     // 持续执行直到 STOP, RETURN 或 SELFDESTRUCT
-  	for {
-  		if in.cfg.Debug {
-  			// Capture pre-execution values for tracing.
-  			logged, pcCopy, gasCopy = false, pc, contract.Gas
-  		}
+    for {
+  	  if in.cfg.Debug {
+  		  // Capture pre-execution values for tracing.
+  		  logged, pcCopy, gasCopy = false, pc, contract.Gas
+  	  }
       
-  		// 根据根据PC计数器获取操作码，根据操作码从JumpTable获取对应的操作函数
-  		op = contract.GetOp(pc)
-  		operation := in.cfg.JumpTable[op]
-  		cost = operation.constantGas // For tracing
-  		// 确保有足够的stack空间执行
-  		if sLen := stack.len(); sLen < operation.minStack {
-  			return nil, &ErrStackUnderflow{stackLen: sLen, required: operation.minStack}
-  		} else if sLen > operation.maxStack {
-  			return nil, &ErrStackOverflow{stackLen: sLen, limit: operation.maxStack}
-  		}
-  		if !contract.UseGas(cost) {
-  			return nil, ErrOutOfGas
-  		}
-  		if operation.dynamicGas != nil {
-        // 有些指令是需要额外的内存消耗，但并不是所有的指令
-        // 在jump_table.go文件中可以看到他们具体每个操作码的对应的额外内存消耗计算
-        // memorySize指向对应的计算消耗内存的函数，根据消耗的内存来计算消费的gas
-  			var memorySize uint64
-  			if operation.memorySize != nil {
-  				memSize, overflow := operation.memorySize(stack)
-  				if overflow {
-  					return nil, ErrGasUintOverflow
-  				}
-  				// memory is expanded in words of 32 bytes. Gas
-  				// is also calculated in words.
-  				if memorySize, overflow = math.SafeMul(toWordSize(memSize), 32); overflow {
-  					return nil, ErrGasUintOverflow
-  				}
-  			}
-  			// 计算此操作花费的gas数量，可用gas不足会抛出错误
-  			var dynamicCost uint64
-  			dynamicCost, err = operation.dynamicGas(in.evm, contract, stack, mem, memorySize)
-  			cost += dynamicCost // for tracing
-  			if err != nil || !contract.UseGas(dynamicCost) {
-  				return nil, ErrOutOfGas
-  			}
-  			// Do tracing before memory expansion
-  			if in.cfg.Debug {
-  				in.cfg.Tracer.CaptureState(pc, op, gasCopy, cost, callContext, in.returnData, in.evm.depth, err)
-  				logged = true
-  			}
-  			if memorySize > 0 {
-  				mem.Resize(memorySize)
-  			}
-  		} else if in.cfg.Debug {
-  			in.cfg.Tracer.CaptureState(pc, op, gasCopy, cost, callContext, in.returnData, in.evm.depth, err)
-  			logged = true
-  		}
-  		// 开始执行此操作码对应的操作函数 
-      // 操作码对应的操作函数都是在core/vm/opcodes.go中
-  		res, err = operation.execute(&pc, in, callContext)
-      // 只有遇到err才会终止运行，其他的Opcodes都会返回nil
-      // 注意即使是selfdestruct、revert或stop正常结束也会以err形式返回
-  		if err != nil {
-  			break
-  		}
-      // 更新PC计数器，继续loops
-  		pc++
-  	}
-  	......
-  	return res, err
+  	  // 根据根据PC计数器获取操作码，根据操作码从JumpTable获取对应的操作函数
+  	  op = contract.GetOp(pc)
+  	  operation := in.cfg.JumpTable[op]
+  	  cost = operation.constantGas // For tracing
+  	  // 确保有足够的stack空间执行
+  	  if sLen := stack.len(); sLen < operation.minStack {
+  		  return nil, &ErrStackUnderflow{stackLen: sLen, required: operation.minStack}
+  	  } else if sLen > operation.maxStack {
+  		  return nil, &ErrStackOverflow{stackLen: sLen, limit: operation.maxStack}
+  	  }
+  	  if !contract.UseGas(cost) {
+  		  return nil, ErrOutOfGas
+  	  }
+  	  if operation.dynamicGas != nil {
+         // 有些指令是需要额外的内存消耗，但并不是所有的指令
+         // 在jump_table.go文件中可以看到他们具体每个操作码的对应的额外内存消耗计算
+         // memorySize指向对应的计算消耗内存的函数，根据消耗的内存来计算消费的gas
+  	 var memorySize uint64
+  	 if operation.memorySize != nil {
+  		  memSize, overflow := operation.memorySize(stack)
+  		  if overflow {
+  			  return nil, ErrGasUintOverflow
+  		  }
+  		  // memory is expanded in words of 32 bytes. Gas
+  		  // is also calculated in words.
+  		  if memorySize, overflow = math.SafeMul(toWordSize(memSize), 32); overflow {
+  			  return nil, ErrGasUintOverflow
+  		  }
+  	  }
+  	  // 计算此操作花费的gas数量，可用gas不足会抛出错误
+  	  var dynamicCost uint64
+  	  dynamicCost, err = operation.dynamicGas(in.evm, contract, stack, mem, memorySize)
+  	  cost += dynamicCost // for tracing
+  	  if err != nil || !contract.UseGas(dynamicCost) {
+  		  return nil, ErrOutOfGas
+  	  }
+  	  // Do tracing before memory expansion
+  	  if in.cfg.Debug {
+  		  in.cfg.Tracer.CaptureState(pc, op, gasCopy, cost, callContext, in.returnData, in.evm.depth, err)
+  		  logged = true
+  	  }
+  	  if memorySize > 0 {
+  		  mem.Resize(memorySize)
+  	  }
+    } else if in.cfg.Debug {
+  	  in.cfg.Tracer.CaptureState(pc, op, gasCopy, cost, callContext, in.returnData, in.evm.depth, err)
+  	  logged = true
+    }
+    // 开始执行此操作码对应的操作函数 
+    // 操作码对应的操作函数都是在core/vm/opcodes.go中
+    res, err = operation.execute(&pc, in, callContext)
+    // 只有遇到err才会终止运行，其他的Opcodes都会返回nil
+    // 注意即使是selfdestruct、revert或stop正常结束也会以err形式返回
+    if err != nil {
+  	  break
+    }
+    // 更新PC计数器，继续loops
+  	pc++
+    }
+    ......
+    return res, err
   }
   ```
 
@@ -453,56 +453,56 @@ func (st *StateTransition) TransitionDb() (*ExecutionResult, error) {
   	p, isPrecompile := evm.precompile(addr)
   
     // 判断这个合约地址是否存在，如果不存在是否是内置(预编译)合约 
-  	if !evm.StateDB.Exist(addr) {
-  		if !isPrecompile && evm.chainRules.IsEIP158 && value.Sign() == 0 {
-  			// Calling a non existing account, don't do anything, but ping the tracer
-  			if evm.Config.Debug {
-  				if evm.depth == 0 {
-  					evm.Config.Tracer.CaptureStart(evm, caller.Address(), addr, false, input, gas, value)
-  					evm.Config.Tracer.CaptureEnd(ret, 0, 0, nil)
-  				} else {
-  					evm.Config.Tracer.CaptureEnter(CALL, caller.Address(), addr, input, gas, value)
-  					evm.Config.Tracer.CaptureExit(ret, 0, nil)
-  				}
-  			}
-  			return nil, gas, nil
-  		}
-  		evm.StateDB.CreateAccount(addr)
-  	}
+    if !evm.StateDB.Exist(addr) {
+  	  if !isPrecompile && evm.chainRules.IsEIP158 && value.Sign() == 0 {
+  		  // Calling a non existing account, don't do anything, but ping the tracer
+  		  if evm.Config.Debug {
+  			  if evm.depth == 0 {
+  				  evm.Config.Tracer.CaptureStart(evm, caller.Address(), addr, false, input, gas, value)
+  				  evm.Config.Tracer.CaptureEnd(ret, 0, 0, nil)
+  			  } else {
+  				  evm.Config.Tracer.CaptureEnter(CALL, caller.Address(), addr, input, gas, value)
+  				  evm.Config.Tracer.CaptureExit(ret, 0, nil)
+  			  }
+  		  }
+  		  return nil, gas, nil
+  	  }
+  	  evm.StateDB.CreateAccount(addr)
+    }
     // 执行 ETH Token转账
-  	evm.Context.Transfer(evm.StateDB, caller.Address(), addr, value)
-  	......
-  	if isPrecompile {
-  		ret, gas, err = RunPrecompiledContract(p, input, gas)
-  	} else {
-      // Initialise a new contract and set the code that is to be used by the EVM.
-  		// The contract is a scoped environment for this execution context only.
-  		code := evm.StateDB.GetCode(addr)
-  		if len(code) == 0 {
-  			ret, err = nil, nil // gas is unchanged
-  		} else {
-  			addrCopy := addr
-  			// 不管是部署合约还是调用合约都要先创建合约对象用例，把存储中合约code加载出来挂到合约对象下
+    evm.Context.Transfer(evm.StateDB, caller.Address(), addr, value)
+    ......
+    if isPrecompile {
+  	  ret, gas, err = RunPrecompiledContract(p, input, gas)
+    } else {
+         // Initialise a new contract and set the code that is to be used by the EVM.
+  	 // The contract is a scoped environment for this execution context only.
+  	 code := evm.StateDB.GetCode(addr)
+  	 if len(code) == 0 {
+  		  ret, err = nil, nil // gas is unchanged
+  	 } else {
+  		  addrCopy := addr
+        // 不管是部署合约还是调用合约都要先创建合约对象用例，把存储中合约code加载出来挂到合约对象下
         // 这里可以看到，CALL指令执行时会创建新的Contract对象，并以内存中的调用参数作为其Input
         // (区别于delegatecall、callcode的实现，会将object contract也配置为caller contract)
-  			// 解释器会为新合约的执行创建新的Stack和Memory，从而不会破环原合约的执行环境
-  			contract := NewContract(caller, AccountRef(addrCopy), value, gas)
-  			contract.SetCallCode(&addrCopy, evm.StateDB.GetCodeHash(addrCopy), code)
+        // 解释器会为新合约的执行创建新的Stack和Memory，从而不会破环原合约的执行环境
+  		 contract := NewContract(caller, AccountRef(addrCopy), value, gas)
+  		 contract.SetCallCode(&addrCopy, evm.StateDB.GetCodeHash(addrCopy), code)
         // 依然是调用解释器的run函数来执行代码，不同之处在于这次的input不在是nil了，而是交易的input内容
-    		// 正如前面提到，input会在交易的data中，CALLDATALOAD这个指令会用于加载input的内容
-  			ret, err = evm.interpreter.Run(contract, input, false)
-  			gas = contract.Gas
-  		}
-  	}
-  	// 如果发生任何错误，revert世界状态state至改变之前（通过snapshot）
+    	// 正如前面提到，input会在交易的data中，CALLDATALOAD这个指令会用于加载input的内容
+  		 ret, err = evm.interpreter.Run(contract, input, false)
+  		 gas = contract.Gas
+  	  }
+    }
+    // 如果发生任何错误，revert世界状态state至改变之前（通过snapshot）
     // 如果不是ErrExecutionReverted错误，则消耗掉所有gas
-  	if err != nil {
-  		evm.StateDB.RevertToSnapshot(snapshot)
-  		if err != ErrExecutionReverted {
-  			gas = 0
-  		}
-  	}
-  	return ret, gas, err
+    if err != nil {
+  	  evm.StateDB.RevertToSnapshot(snapshot)
+  	  if err != ErrExecutionReverted {
+  		  gas = 0
+  	  }
+    }
+    return ret, gas, err
   }
   ```
 
@@ -524,33 +524,33 @@ type JumpTable [256]*operation
 
 // operation
 type operation struct {
-	// 执行函数
-	execute     executionFunc
+  // 执行函数
+  execute     executionFunc
   // operation所消耗gas固定值
-	constantGas uint64
+  constantGas uint64
   // 预留gas实际动态消耗计算函数
-	dynamicGas  gasFunc
-	// 本次operation所需最小stack空间
-	minStack int
-	// 能为本次operation分配的最大stack空间
-	maxStack int
+  dynamicGas  gasFunc
+  // 本次operation所需最小stack空间
+  minStack int
+  // 能为本次operation分配的最大stack空间
+  maxStack int
 
-	// 计算本次operation所需的内存大小的函数
-	memorySize memorySizeFunc
+  // 计算本次operation所需的内存大小的函数
+  memorySize memorySizeFunc
 }
 
 // 不同版本指令集，针对不同的以太坊版本
 var (
-	frontierInstructionSet         = newFrontierInstructionSet()
-	homesteadInstructionSet        = newHomesteadInstructionSet()
-	tangerineWhistleInstructionSet = newTangerineWhistleInstructionSet()
-	spuriousDragonInstructionSet   = newSpuriousDragonInstructionSet()
-	byzantiumInstructionSet        = newByzantiumInstructionSet()
-	constantinopleInstructionSet   = newConstantinopleInstructionSet()
-	istanbulInstructionSet         = newIstanbulInstructionSet()
-	berlinInstructionSet           = newBerlinInstructionSet()
-	londonInstructionSet           = newLondonInstructionSet()
-	mergeInstructionSet            = newMergeInstructionSet()
+  frontierInstructionSet         = newFrontierInstructionSet()
+  homesteadInstructionSet        = newHomesteadInstructionSet()
+  tangerineWhistleInstructionSet = newTangerineWhistleInstructionSet()
+  spuriousDragonInstructionSet   = newSpuriousDragonInstructionSet()
+  byzantiumInstructionSet        = newByzantiumInstructionSet()
+  constantinopleInstructionSet   = newConstantinopleInstructionSet()
+  istanbulInstructionSet         = newIstanbulInstructionSet()
+  berlinInstructionSet           = newBerlinInstructionSet()
+  londonInstructionSet           = newLondonInstructionSet()
+  mergeInstructionSet            = newMergeInstructionSet()
 )
 ```
 
@@ -924,12 +924,12 @@ ETK是一个EVM 工具包，到目前位置，可以方便的将用mnemonic写�
   > 手动计算跳转目的地地址将是一项非常无意义的任务，因此Assembler支持为代码中的特定位置分配特定的`label`，下例为一个无限循环mnemonic指令
   >
   > ```bash
-  > label0:             # <- 标签名为 "label0",
-  >                  #    标签的value为偏移值，此处为0（因为在所有指令之前）
-  >  jumpdest
-  >  push1 label0    # <- 这里就可以直接Push对应标签，减少了计算偏移值的麻烦
+  > label0:         # <- 标签名为 "label0",
+  >                 #    标签的value为偏移值，此处为0（因为在所有指令之前）
+  > jumpdest
+  > push1 label0    # <- 这里就可以直接Push对应标签，减少了计算偏移值的麻烦
   > 
-  >  jump            # 调整到offset=0位置的指令，对应jumpdest
+  > jump            # 调整到offset=0位置的指令，对应jumpdest
   > ```
 
   ```

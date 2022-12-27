@@ -11,36 +11,36 @@
 ```go
 // core/state/state_object.go
 type stateObject struct {
-	address  common.Address
+  address  common.Address
   addrHash common.Hash // hash(address)
   
   // account state
-	data     types.StateAccount
+  data     types.StateAccount
   // 指向stateDB: 真正存储数据的地方
   // 方便调用 StateDB 相关的API对Account所对应的stateObject进行CRUD操作
-	db       *StateDB
+  db       *StateDB
 
-	// DB error.
-	// State objects are used by the consensus core and VM which are
-	// unable to deal with database-level errors. Any error that occurs
-	// during a database read is memoized here and will eventually be returned
-	// by StateDB.Commit.
-	dbErr error
+  // DB error.
+  // State objects are used by the consensus core and VM which are
+  // unable to deal with database-level errors. Any error that occurs
+  // during a database read is memoized here and will eventually be returned
+  // by StateDB.Commit.
+  dbErr error
 
-	// 内存缓存相关逻辑
-	trie Trie // storage trie
-	code Code // contract bytecode, 缓存代码当代码被从DB storage中加载出来 
+  // 内存缓存相关逻辑
+  trie Trie // storage trie
+  code Code // contract bytecode, 缓存代码当代码被从DB storage中加载出来 
 
   // 在执行 Transaction 的时候缓存合约修改的持久化数据
   // EOA账户为空
-	originStorage  Storage 
-	pendingStorage Storage 
-	dirtyStorage   Storage 
-	fakeStorage    Storage 
+  originStorage  Storage 
+  pendingStorage Storage 
+  dirtyStorage   Storage 
+  fakeStorage    Storage 
 
   dirtyCode bool // true: 当code被更新
-	suicided  bool
-	deleted   bool
+  suicided  bool
+  deleted   bool
 }
 ```
 
@@ -101,17 +101,15 @@ func (ks *KeyStore) NewAccount(passphrase string) (accounts.Account, error) {
 
   - **第二步：64字节，公钥 (public key)**
 
-  　　1、采用椭圆曲线数字签名算法ECDSA-secp256k1将私钥（32字节）映射成公钥（算上前缀65字节）
+  　　采用椭圆曲线数字签名算法ECDSA-secp256k1将私钥（32字节）映射成公钥（算上前缀65字节）
 
-  ​	（前缀04+X公钥+Y公钥）
+  ​	（前缀04+X公钥+Y公钥），公钥是椭圆曲线上的一点，故有`(X, Y)`
 
-  > 公钥是椭圆曲线上的一点，故有`(X, Y)`
-
-  　　`04`
-  　　`50863ad64a87ae8a2fe83c1af1a8403cb53f53e486d8511dad8a04887e5b2352`
+  　　`04`<br>
+  　　`50863ad64a87ae8a2fe83c1af1a8403cb53f53e486d8511dad8a04887e5b2352`<br>
   　　`2cd470243453a299fa9e77237716103abc11a1df38855ed6f2ee187e9c582ba6`
 
-  ​       2、（去掉`04`前缀）计算公钥的 **Keccak-256** 哈希值（32bytes）：
+  ​   （去掉`04`前缀）计算公钥的 **Keccak-256** 哈希值（32bytes）：
 
   　　`fc12ad814631ba689f7abe67 1016f75c54c607f082ae6b0881fac0abeda21781`
 

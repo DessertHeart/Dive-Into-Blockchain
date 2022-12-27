@@ -16,23 +16,23 @@ Transaction是驱动Ethereum执行数据操作的媒介，它主要起到下面�
 >
 > 二、如果调用Contract中的只读函数，是不需要构造Transaction的。相对的，所有参与Account/Contract数据修改的操作都需要通过Transaction来进行。
 >
-> 三、广义的Transaction只能由外部账户(EOA)构建。Contract是没有办法显式构造交易的，但是，实际在合约函数的执行过程中，Contract可以通过构造**internal transaction（合约内部交易称为internal transaction，即在一笔交易执行过程中，合约根据一定条件，进行转账或者是调用新合约等一系列动作产生的结果，正如 etherscan 上标注的一样，`Internal Transactions as a result of Contract Execution`）**来与其他的合约进行交互。
+> 三、广义的Transaction只能由外部账户(EOA)构建。Contract是没有办法显式构造交易的，但是，实际在合约函数的执行过程中，Contract可以通过构造internal transaction（合约内部交易称为internal transaction，即在一笔交易执行过程中，合约根据一定条件，进行转账或者是调用新合约等一系列动作产生的结果，正如 etherscan 上标注的一样，`Internal Transactions as a result of Contract Execution`）来与其他的合约进行交互。
 
 ```go
 // core/types/transaction.go
 type Transaction struct {
-	// TxData为接口
+  // TxData为接口
   // 与Transaction直接相关的数据都由这个变量来维护
   inner TxData   
-	time  time.Time 
+  time  time.Time 
 
   // 缓存：对一些哈希运算等进行缓存，降低CPU计算量
   // 交易哈希
-	hash atomic.Value
+  hash atomic.Value
   // 交易大小：交易信息进行RLP编码后的数据大小,代表交易网络传输大小、代表交易占区块大小、代表交易存储大小。   // 每笔交易进入交易池都需要检查交易大小是否超过32KB
-	size atomic.Value
+  size atomic.Value
   // 交易发送方EOA
-	from atomic.Value
+  from atomic.Value
 }
 ```
 

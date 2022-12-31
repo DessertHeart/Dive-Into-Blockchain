@@ -16,17 +16,14 @@
 ## 智能合约安全：水能载舟，亦能覆舟
 
 + **🔗[Damn Vulnerable Defi 系列全解](https://github.com/DessertHeart/DiveIntoBlockchain/tree/main/safeBlockchain/DamnVulnerableDefi)**
-+ **🔗[EVM puzzules 系列全解]()**
-+ **🔗[chainflag 系列全解]()**
++ **🔗[EVM puzzules 系列全解](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/main/safeBlockchain/EVM_Puzzles)**
++ **🔗[chainflag 系列全解](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/main/safeBlockchain/Chainflag)**
 
 ## 公链底层开发：知己知彼，百战不殆
 
-+ **🔗[从0到1，搭建简易Bitcoin](https://github.com)**
++ **🔗[从0到1，搭建简易Bitcoin](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/main/DevBlockchain/Mini_Bitcoin)**
 
 ## 智能合约应用：积跬步，以致千里
 
 + :zap:**闪电贷**
-  + **🔗[AAVE](https://github.com)**
-  + **🔗[UniswapV1](https://github.com)**
-  + **🔗[UniswapV2](https://github.com)**
-  + **🔗[UniswapV3](https://github.com)**
+  + **🔗[AAVE+UniswapV2+UniswapV3](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/main/PlayBlockchain)**

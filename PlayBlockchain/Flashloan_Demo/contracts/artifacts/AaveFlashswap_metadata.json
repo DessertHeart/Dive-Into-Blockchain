@@ -1,0 +1,273 @@
+{
+	"compiler": {
+		"version": "0.8.10+commit.fc410830"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract IPoolAddressesProvider",
+						"name": "_provider",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes",
+						"name": "data",
+						"type": "bytes"
+					}
+				],
+				"name": "CatchDataError",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "message",
+						"type": "string"
+					}
+				],
+				"name": "CatchStringError",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "string",
+						"name": "message",
+						"type": "string"
+					}
+				],
+				"name": "SuccessEvent",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "ADDRESSES_PROVIDER",
+				"outputs": [
+					{
+						"internalType": "contract IPoolAddressesProvider",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "POOL",
+				"outputs": [
+					{
+						"internalType": "contract IPool",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_fees",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_sender",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_params",
+						"type": "bytes"
+					}
+				],
+				"name": "executeOperation",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_asset",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "flashSwapCall",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"AaveFlashswap.sol": "AaveFlashswap"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"AaveFlashswap.sol": {
+			"keccak256": "0x235ca59dd8c0fb42619db78e24e68794ab22e01401c88de7773813ad8eb31ce2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3fb68c15930b55748aa9baccd35b9fc6864e5cd78d61f5fb09a37417c4ffca51",
+				"dweb:/ipfs/QmXmPMVg1JQpsU2ikqetXH7GuPqZRgPLqT5jR27FhQRqob"
+			]
+		},
+		"aave-v3-core/contracts/dependencies/openzeppelin/contracts/IERC20.sol": {
+			"keccak256": "0xe11569c4b7eeb97c4c1eb7c9fbc69168ee8bcb1286ce8b9a3d2814d3cd6013aa",
+			"license": "agpl-3.0",
+			"urls": [
+				"bzz-raw://467c48fbbf2b9b6e26445da646cf013da89f7adb41aa616fd9de6984119c413d",
+				"dweb:/ipfs/QmZZadLDEjUUdCbzTPudNGQQAEAoLwHbX3ZpAnd4uihQhV"
+			]
+		},
+		"aave-v3-core/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol": {
+			"keccak256": "0x1cd8ed0c441105862c08b832a58191e72f08ee630da802ec6f8c6047546ecbf0",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://bf917bdddf818d4fad0091bb7b9cc540564dcdd25233676377c966b2750b5d72",
+				"dweb:/ipfs/QmR4zrJXxLzFV3ys9Tv6VwFmu9n81Dj3spFxnXkMdeb92d"
+			]
+		},
+		"aave-v3-core/contracts/flashloan/interfaces/IFlashLoanSimpleReceiver.sol": {
+			"keccak256": "0xbab57f805e4b9fe6378e69d5d621954d4ad5433d6372b1b027359b18f5717892",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://10e37690a4e8ae1230032061232c827d0ac75cd6507c19fdea0e43b013530604",
+				"dweb:/ipfs/QmQqGKRTJRUqQdz1Xof4Y3FGrQaEx5X2ymGTZeiRE6kAcf"
+			]
+		},
+		"aave-v3-core/contracts/interfaces/IPool.sol": {
+			"keccak256": "0xe0a0abb525051bac37b25600a0b2e8a20e895e3a4bd8238b10d9cdd881eaddd4",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://339b89269fbd3ed4e2220fc01183468505cbe4f5d2b0ce0ce76e2ee77e782a04",
+				"dweb:/ipfs/QmbDtGypPUa66HkZZwMu8HB6HzKjLNAxfje8KkW2AHc3PD"
+			]
+		},
+		"aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol": {
+			"keccak256": "0xf8f2e452ad560ecb6825c46b348603345392f960d49bb13a7ca03a0b32d4c0a6",
+			"license": "AGPL-3.0",
+			"urls": [
+				"bzz-raw://1b5a52e2c832c61fc7cc26d8b56b55592b0cef9dc561f8b8e91f7e240beb5e4b",
+				"dweb:/ipfs/QmWqDg3gvaewipUPNZsowNU6QYVYkUiNCmnDmDCUXnv49a"
+			]
+		},
+		"aave-v3-core/contracts/protocol/libraries/types/DataTypes.sol": {
+			"keccak256": "0x2b24b9915b58cd37fcecf8e291093a8a8af188cb36a6aebc2d72e14aa8689ec6",
+			"license": "BUSL-1.1",
+			"urls": [
+				"bzz-raw://1876a0eeb943e6682c000a18988df7e44a1a7ac638a5a7a499e75e0b244da9a7",
+				"dweb:/ipfs/QmQZjSwU1UfsWUxaMnpLqmFryexw9DF16Ztt1B7U1yhE1j"
+			]
+		},
+		"uniswap-v2-periphery-master/contracts/interfaces/IUniswapV2Router01.sol": {
+			"keccak256": "0x608b42c9eb8629e4b4b2fba437c62be48cee8ab920bf1cecb0b212aa00342403",
+			"urls": [
+				"bzz-raw://c9a7613abdbf51b774b4c90a043c55d5c9145121d54d2e6bd32cdc38491e9249",
+				"dweb:/ipfs/QmUudeJSPyuqm6bJWmfqtvo7jMYfa8yqPKF1p8eP8QE5cX"
+			]
+		},
+		"uniswap-v2-periphery-master/contracts/interfaces/IUniswapV2Router02.sol": {
+			"keccak256": "0x6cd3e8353cad3bda963bf27bd2f7d1846e33ea5fb569251eaacf69fe3de58055",
+			"urls": [
+				"bzz-raw://fa399899084741c732a5515ca965b8557ffa16a38e86cf5dede3007f1bb430c4",
+				"dweb:/ipfs/QmPcp3YMPf7tbDZp66qykWoZj7yPy7hMLXAYbwTqHaRWn6"
+			]
+		},
+		"uniswap-v3-core/interfaces/IERC20Minimal.sol": {
+			"keccak256": "0xca2c0c83cbfb29c22a78c53bc74d5df3b6ec693921dd655b3c03d8deed610073",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://7179a30974693915559b6edc6e45eecfddc0b33cf7994be200f083271a405dc1",
+				"dweb:/ipfs/QmU5gJJT2XHke4HoWEcDL2LvYZ5d2qNp6tTE3EJdqwp41x"
+			]
+		},
+		"uniswap-v3-core/interfaces/callback/IUniswapV3SwapCallback.sol": {
+			"keccak256": "0x7161bdeebfe26028e147e2f31c5f1efdbca7b9004efaaf21baf46ae8f1df953e",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://225db90d90e693fac4fc630ed428820f9643a527ca27059cd9dbad0fc79b14d0",
+				"dweb:/ipfs/QmfEUsxTM8LoZTfazpcHhc8tevPid9EX9oLsNuJiVyXeS4"
+			]
+		},
+		"uniswap-v3-core/libraries/TransferHelper.sol": {
+			"keccak256": "0x46fc92f6115b81788aa1f082a0d461044af8e59f25714d9544d85a8cbdc6b154",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://5574ad1b8b4728865e7ba52a9c1f16825d9d77dfc1114852990f59818885fb77",
+				"dweb:/ipfs/QmevPygx9QS3M77HYmLiBHLWsrgM1hNpMjCrFKD1ag7B5V"
+			]
+		},
+		"uniswap-v3-periphery/interfaces/ISwapRouter.sol": {
+			"keccak256": "0x7ed7af4fd198fa111565416bf9b875d8027d2e0992b0f5bfd65a87e7347b8af9",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://6116a7a239fa9ae19b0424d55a7a8cb9392f9b173cf6d793c7348d84bb5d3034",
+				"dweb:/ipfs/QmS7q8dGJVsnFwiUdV92oUrYYXfj2qXcagrnDNyhhPUCDf"
+			]
+		}
+	},
+	"version": 1
+}

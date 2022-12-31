@@ -1,0 +1,55 @@
+{
+	"compiler": {
+		"version": "0.8.10+commit.fc410830"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"title": "TransferHelper",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"notice": "Contains helper methods for interacting with ERC20 tokens that do not consistently return true/false",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"uniswap-v3-core/libraries/TransferHelper.sol": "TransferHelper"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"uniswap-v3-core/interfaces/IERC20Minimal.sol": {
+			"keccak256": "0xca2c0c83cbfb29c22a78c53bc74d5df3b6ec693921dd655b3c03d8deed610073",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://7179a30974693915559b6edc6e45eecfddc0b33cf7994be200f083271a405dc1",
+				"dweb:/ipfs/QmU5gJJT2XHke4HoWEcDL2LvYZ5d2qNp6tTE3EJdqwp41x"
+			]
+		},
+		"uniswap-v3-core/libraries/TransferHelper.sol": {
+			"keccak256": "0x46fc92f6115b81788aa1f082a0d461044af8e59f25714d9544d85a8cbdc6b154",
+			"license": "GPL-2.0-or-later",
+			"urls": [
+				"bzz-raw://5574ad1b8b4728865e7ba52a9c1f16825d9d77dfc1114852990f59818885fb77",
+				"dweb:/ipfs/QmevPygx9QS3M77HYmLiBHLWsrgM1hNpMjCrFKD1ag7B5V"
+			]
+		}
+	},
+	"version": 1
+}

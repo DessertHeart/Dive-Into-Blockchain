@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "ForFlag",
+				"type": "event"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"BoxGame/Attack.sol": "Fa"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"BoxGame/Attack.sol": {
+			"keccak256": "0x7889189c986911cea6745e3320082c65a2136a579d89519c75c9ab389d1a6a95",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8b2209161b3384e454095f2567b4d3216dc4a33ed01d202cf81d19df01618f63",
+				"dweb:/ipfs/QmXjtM2Z9nkryMyNg9QFnwPuiJ82P1tYkgxUU6d8aqdfKJ"
+			]
+		}
+	},
+	"version": 1
+}

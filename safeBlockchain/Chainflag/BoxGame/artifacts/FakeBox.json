@@ -1,0 +1,86 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {
+				"@_129": {
+					"entryPoint": null,
+					"id": 129,
+					"parameterSlots": 0,
+					"returnSlots": 0
+				}
+			},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "6080604052348015600f57600080fd5b507f7f000000000001000000000000000000000000000000000000000000000000006000527e7f89814845d4ef05a4059f76ea572f39df73fbe3d1c9b20f12b3b03d09f9996020527fb9e20160206000a100000000000000000000000000000000000000000000000060405260486000f3fe",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH32 0x7F00000000000100000000000000000000000000000000000000000000000000 PUSH1 0x0 MSTORE PUSH31 0x7F89814845D4EF05A4059F76EA572F39DF73FBE3D1C9B20F12B3B03D09F999 PUSH1 0x20 MSTORE PUSH32 0xB9E20160206000A1000000000000000000000000000000000000000000000000 PUSH1 0x40 MSTORE PUSH1 0x48 PUSH1 0x0 RETURN INVALID ",
+			"sourceMap": "2272:1128:0:-:0;;;2329:1069;;;;;;;;;;3101:66;3098:1;3091:77;3194:66;3188:4;3181:80;3287:66;3281:4;3274:80;3377:4;3374:1;3367:15"
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "6080604052600080fdfea2646970667358221220bce7f817f4e15c785e54bc51c929a6d1dec630b9f1bbe908f86d9beb1e9af12d64736f6c63430008110033",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xBC 0xE7 0xF8 OR DELEGATECALL 0xE1 0x5C PUSH25 0x5E54BC51C929A6D1DEC630B9F1BBE908F86D9BEB1E9AF12D64 PUSH20 0x6F6C634300081100330000000000000000000000 ",
+			"sourceMap": "2272:1128:0:-:0;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "12600",
+				"executionCost": "75",
+				"totalCost": "12675"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": [
+		{
+			"inputs": [],
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "addr",
+					"type": "address"
+				}
+			],
+			"name": "ForFlag",
+			"type": "event"
+		}
+	]
+}

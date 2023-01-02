@@ -1,0 +1,62 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "6080604052348015600f57600080fd5b507f6000805560016101007f36306db541fd1551fd93a60031e8a8c89d69ddef41d66000527f249f5fdc265dbc8ffea20155327f34a2b38493519efd2aea7c8727c9ed8774c96020527f6c96418d940632b22aa9df022106556132fe6001013452346002601e3031f500604052605f6000f3fe",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH32 0x6000805560016101007F36306DB541FD1551FD93A60031E8A8C89D69DDEF41D6 PUSH1 0x0 MSTORE PUSH32 0x249F5FDC265DBC8FFEA20155327F34A2B38493519EFD2AEA7C8727C9ED8774C9 PUSH1 0x20 MSTORE PUSH32 0x6C96418D940632B22AA9DF022106556132FE6001013452346002601E3031F500 PUSH1 0x40 MSTORE PUSH1 0x5F PUSH1 0x0 RETURN INVALID ",
+			"sourceMap": "2633:1518:0:-;;;2653:1496;8:9:-1;5:2;;;30:1;27;20:12;5:2;2653:1496:0;3852:66;3849:1;3842:77;3945:66;3939:4;3932:80;4038:66;4032:4;4025:80;4128:4;4125:1;4118:15"
+		},
+		"deployedBytecode": {
+			"linkReferences": {},
+			"object": "6080604052600080fdfea265627a7a72315820086c47a3178369d613a19ea7e468f126f526c1baa900ab6d8a991451e1b2d2c464736f6c63430005110032",
+			"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH6 0x627A7A723158 KECCAK256 ADDMOD PUSH13 0x47A3178369D613A19EA7E468F1 0x26 CREATE2 0x26 0xC1 0xBA 0xA9 STOP 0xAB PUSH14 0x8A991451E1B2D2C464736F6C6343 STOP SDIV GT STOP ORIGIN ",
+			"sourceMap": "2633:1518:0:-;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "12400",
+				"executionCost": "75",
+				"totalCost": "12475"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": [
+		{
+			"inputs": [],
+			"payable": false,
+			"stateMutability": "nonpayable",
+			"type": "constructor"
+		}
+	]
+}

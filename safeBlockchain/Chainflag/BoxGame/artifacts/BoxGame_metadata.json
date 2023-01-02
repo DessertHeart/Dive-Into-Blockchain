@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "payforflag",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"BoxGame/Attack.sol": "BoxGame"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"BoxGame/Attack.sol": {
+			"keccak256": "0x4ce7d13d3b822177b4fc040f2541e7b74c774036b711d4f91e1b0fcf7a8f6d9c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ae298efd81dd0cc29fab46efe0c4fe78a77e99740721f8ecf16dde8c954dc1e3",
+				"dweb:/ipfs/QmWcg2rbG9RvTEG1sSvXt3tqKyJ426CCYzBenWFSXXWkkz"
+			]
+		}
+	},
+	"version": 1
+}

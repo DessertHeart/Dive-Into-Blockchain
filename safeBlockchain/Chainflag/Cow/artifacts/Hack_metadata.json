@@ -1,0 +1,74 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "getFlag",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hackOwner1",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hackOwner2",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "hackOwner3",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Cow/Attack.sol": "Hack"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Cow/Attack.sol": {
+			"keccak256": "0xa32efd4cc625e993a6d03ae3d3078afdb66bc79db24828eb8699c7cbc70eca28",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://5827718aab0a8c88711b52f74190bba45b1fead38512e8d3ba56d0ee64a1133e",
+				"dweb:/ipfs/QmRsJy7E6FHv3JqUn96ptsMUUmdSUY2XLKXLWLpVLBhLs3"
+			]
+		}
+	},
+	"version": 1
+}

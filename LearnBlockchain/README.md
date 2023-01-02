@@ -1,4 +1,4 @@
-# LearnBlockchain
+# :books: LearnBlockchain
 
 深入公链技术、跨链技术等底层技术应用的学习手册，从技术开发角度掌握其原理
 

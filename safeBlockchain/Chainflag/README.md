@@ -4,3 +4,8 @@
 
 ## Playground
 Visit https://chainflag.org
+
+## Resolutions
+  + :one:  [BoxGame](./BoxGame)
+  + :two:	 [Cow](./Cow)
+  + :three:	 [EasySandbox](./EasySandBox)

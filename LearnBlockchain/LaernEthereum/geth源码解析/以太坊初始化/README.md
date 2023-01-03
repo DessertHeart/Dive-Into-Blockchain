@@ -2,13 +2,18 @@
 
 #### 前言）以太坊客户端与团体
 
-![图片](https://mmbiz.qpic.cn/sz_mmbiz_png/tsoSYGv5wmO9lNWiaMNmzUApfBFpUnN2nz5ibQsWMwiaxClPEEHum1nSxmlmgYdtLhAUD95oPiaAPjAMasHWibYxSUA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1)
+
+<div align=center>
+<img src="https://mmbiz.qpic.cn/sz_mmbiz_png/tsoSYGv5wmO9lNWiaMNmzUApfBFpUnN2nz5ibQsWMwiaxClPEEHum1nSxmlmgYdtLhAUD95oPiaAPjAMasHWibYxSUA/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" style="width:65%;">
+</div>
 
 *<u>2022年1月源自[ethernodes](https://ethernodes.org/)与[blockprint](https://github.com/sigp/blockprint)</u>*
 
 - *以太坊客户端*
 
-  ![已连接的执行客户端和共识客户端](https://ethereum.org/static/7a59bdb7a666b01a74535e8bea21a532/c1b63/eth1eth2client.png)
+<div align=center>
+<img src="https://ethereum.org/static/7a59bdb7a666b01a74535e8bea21a532/c1b63/eth1eth2client.png" style="width:65%;">
+</div>
 
   - **执行客户端**(原ETH1.0客户端)：也称为执行引擎，侦听网络中广播的新交易，在以太坊虚拟机中执行它们，并保存所有当前以太坊数据的最新状态和数据库。 
 
@@ -35,6 +40,7 @@
     - 轻节点仅下载区块头， 所需的任何其他信息都从全节点请求，然后可以根据区块头中的状态根独自验证收到的数据。这帮助用户无需装备昂贵的硬件或高带宽，就可以加入以太坊网络。
 
     - 轻节点不参与共识（即不能成为矿工或验证者），但可以访问以太坊区块链，其功能与全节点相同。
+    > 以太坊有一个LES协议，light ethereum subprotocol，是为轻节点通讯准备的。执行这个协议还是靠自愿的，没有强制的措施让客户端去执行这个协议，如果你运行了一个全节点，并且愿意服务轻节点的话，比如geth，可以打开 light.serve，限制自己执行LES的时间比例，也可以用light.ingress, egress, maxpeer等命令，限制自己为轻节点付出的负担。多数做轻节点客户端的团队，自己也会跑全节点来运维与测试。
 
 - *以太坊中的团体与组织*
 
@@ -66,18 +72,19 @@ func geth(ctx *cli.Context) error {
       return fmt.Errorf("invalid command: %q", args[0])
    }
 
-  // 1.选择对应以太坊网络，预分配内存缓存，启动服务监控
+   // 1.选择对应以太坊网络，预分配内存缓存，启动服务监控
    prepare(ctx)
   
    // 2.stack为Node实例，backend为节点运行所需的后端实例，提供更为具体、底层的以太坊的功能性Service
    // makeFullNode => makeConfigNode返回default节点，后续导入配置至该节点
    stack, backend := makeFullNode(ctx)
    defer stack.Close()
-  
-	 // 3.启动一个以太坊节点Node.Start()
+  	
+   // 3.启动一个以太坊节点Node.Start()
    // 会从Node.lifecycles中注册的backend服务实例，并启动它们
    startNode(ctx, stack, backend, false)
-  // 堵塞主线程，其他的功能模块的服务被分散到其他的子协程中进行维护,通过内置函数close()关闭
+   
+   // 堵塞主线程，其他的功能模块的服务被分散到其他的子协程中进行维护,通过内置函数close()关闭
    stack.Wait()
    return nil
 }

@@ -165,23 +165,26 @@ func Sign(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
 ```go
 // core/transaction_signing.go
 func SignTx(tx *Transaction, s Signer, prv *ecdsa.PrivateKey) (*Transaction, error) {
-	// 交易签名时，需要提供一个签名器(Signer)和私钥(PrivateKey)。
+  // 交易签名时，需要提供一个签名器(Signer)和私钥(PrivateKey)。
   // 需要Singer是因为在EIP155修复重放攻击漏洞后，需要保持旧区块链的签名方式不变，
   // 但又需要提供新版本的签名方式。因此通过接口实现新旧签名方式，根据区块高度创建不同的签名器。
   h := s.Hash(tx)
-	sig, err := crypto.Sign(h[:], prv)
-	if err != nil {
-		return nil, err
-	}
+  sig, err := crypto.Sign(h[:], prv)
+  if err != nil {
+  	return nil, err
+  }
   // 将签名结果解析成三段R、S、V，拷贝交易对象并赋值签名结果。最终返回一笔新的已签名交易。
   // 对应前文transaction的结构V、R、S
-	return tx.WithSignature(s, sig)
+  return tx.WithSignature(s, sig)
 }
 ```
 
-![以太坊交易签名流程](https://img.learnblockchain.cn/2019/04/27_ethereum-tx-sign-flow.png!de)
+<div align=center>
+<img src="https://img.learnblockchain.cn/2019/04/27_ethereum-tx-sign-flow.png" style="width:65%;">
+</div>
 
-#### 2）SC账户
+
+#### 2）CA账户
 
 **Storage**是一个 key 和 value 都是`common.Hash`类型的 map 结构，account code 实际存储位置，与EOA账户相比合约账户额外保存了一个存储层(Storage)用于存储合约代码中持久化的变量的数据
 
@@ -189,9 +192,32 @@ func SignTx(tx *Transaction, s Signer, prv *ecdsa.PrivateKey) (*Transaction, err
 
 Storage 层的基本组成单元称为槽 (Slot)。若干个 Slot 按照Stack的方式顺序集合在一起就构造成了 Storage 层。每个 Slot 的大小是 256 bits（32 bytes）的数据。
 
-Slot 作为基本的存储单元，通过地址索引的方式被上层函数访问。Slot的地址索引的长度同样是32 bytes(256 bits)，寻址空间从 `0x0000000000000000000000000000000000000000000000000000000000000000` 到 `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF`。因此在理论状态下，一个 合约 可以最多保存$(2^{256} - 1)$ bytes的数据，这是个相当大的数字。
+Slot 作为基本的存储单元，通过地址索引的方式被上层函数访问。Slot的地址索引的长度同样是32 bytes(256 bits)，寻址空间从 `0x0000000000000000000000000000000000000000000000000000000000000000` 到 `0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF`。因此在理论状态下，一个 合约 可以最多保存 2^256 bytes (0 - 2^256-1) 的数据，这是个相当大的数字。
 
-> 可观测宇宙中约有$2^{272}$个原子
+
+
+```
+# 插槽式的数组存储
+----------------------------------
+|               0                |     # slot 0
+----------------------------------
+|               1                |     # slot 1
+----------------------------------
+|               2                |     # slot 2
+----------------------------------
+|              ...               |     # ...
+----------------------------------
+|              ...               |     # 每个插槽大小为 32 字节
+----------------------------------
+|              ...               |     # ...
+----------------------------------
+|            2^256-1             |     # slot 2^256-1
+----------------------------------
+```
+
+
+
+> 可观测宇宙中约有2^272个原子
 
 ```go
 // core/state/state_object.go

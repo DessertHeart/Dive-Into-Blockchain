@@ -96,11 +96,11 @@ type BlockChain struct {
 
 #### 2）[共识机制](https://ethos.dev/beacon-chain)
 
-- **共识逻辑**
+- **PoS共识协议Casper**
 
   slot是将块添加到信标链的时机，每个slot为 12 秒，一个epoch为 32 个slot：6.4 分钟
 
-  ![Checkpoint is same for Epoch 1 and Epoch 2](https://ethos.dev/assets/images/posts/beacon-chain/Beacon-Chain-Checkpoints.jpg)
+  ![image](https://user-images.githubusercontent.com/93460127/229422500-ef129fbc-ec9d-4c41-aad1-43d7fa450aa6.png)
 
   > 注意：某个 slot 可能没有区块，但当系统以最佳方式运行时，区块会添加到每个可用的 slot 中
   >
@@ -108,25 +108,27 @@ type BlockChain struct {
 
   每个 epoch 中，第一个 slot 中的区块是一个**检查点 (checkpoint)**。被用于使区块链账本上的记录变得永久和不可篡改。
 
-  - 第一步，如果所有活跃验证者质押的 ETH 余额中至少有 2/3 (即“绝对多数”) 证明了**最近的两个检查点**(当前的被称为“目标检查点”，前一个被称为“源检查点”)，那么这两个检查点之间的这段区块就被认定为**“合理化” (justified) **。
+  - 第一步，如果所有活跃验证者质押的 ETH 余额中至少有 2/3 (即“绝对多数”) 证明了**最近的两个检查点**(当前的被称为“目标检查点”，前一个被称为“源检查点”)，那么这两个检查点之间的这段区块就被认定为 “合理化” (justified) 。
 
-  - 第二步，一旦某个被“合理化”的检查点之后新出现了另一个被“合理化”的检查点，那么前一个检查点就是**“敲定” (finalized)** 。在这个检查点之前的所有区块/记录都成为了区块链上永久不可篡改的记录。
+  - 第二步，一旦某个被“合理化”的检查点之后新出现了另一个被“合理化”的检查点，那么前一个检查点就是 “敲定” (finalized) 。在这个检查点之前的所有区块/记录都成为了区块链上永久不可篡改的记录。
 
 - **系统角色**
 
-  - Validator验证者：虚拟矿工Miner，验证从其他验证者那里接收到的区块并验证正确性并签名，同时对有效的区块进行“**证明”(attestations-包含 LMD GHOST 投票和 FFG 投票)**，并通过**Casper FFG（finality gadget）投票**（FFG投票每个验证者都要做）来对每个epoch的记录进行上述 “justified” 与 "finalized"。此外，任一验证者将不定期地被要求成为**提议者 (proposer)出一个新区块**
+  - Validator验证者：虚拟矿工Miner，验证从其他验证者那里接收到的区块并验证正确性并签名，同时对有效的区块进行“**证明”(attestations-包含 [LMD GHOST 投票和Casper FFG 投票](https://news.cnyes.com/news/id/4978319))**，通过**Casper FFG（finality gadget）投票**（FFG投票每个验证者都要做）来对每个epoch的记录进行上述 “justified” 与 "finalized"。此外，任一验证者将不定期地被要求成为**提议者 (proposer)出一个新区块**
 
-    > 注意：每个slot的proposer选取是从j合中选，与committee无关，且还要避免是committee成员。
-
-    
-
-    ![validator key schematic](https://ethereum.org/static/8b68c1825d524f8102b5e58574824c77/e0885/validator-key-schematic.png)
+    > 注意：每个slot的proposer选取是从该slot的committee集合中选择，其余人为验证者。
+    > LMD(Latest Message Driven), 即根据验证者最近一次的投票（Latest Message Driven）确定每个区块的weight
 
     > staking赛道解决方案：分布式验证者 (Distributed Validators, DV) 是一种将单个验证者/节点的职责被分给几个共同验证者/节点 (co-validator)，应用[BLS 签名方案](https://www.ethereum.cn/Eth2/distributed-validator-specs)以提高与在一个单一机器上运行一个验证者客户端相比的韧性 (安全性、活性，或两者兼有)。如[Obol Network](https://mirror.xyz/bitcoinorange.eth/gyXAG1neqkm7nBCNFk77wLd5llZIFoVk3eqezI-wPZI)
-    >
+    
+    > 一个验证者节点上可以运行多个验证者Validator，在本地keystore文件中保存多个密钥对即可
+    <div align=center>
+    <img src="https://ethereum.org/static/8b68c1825d524f8102b5e58574824c77/e0885/validator-key-schematic.png" style="width:65%;">
+    </div>
+    
     > 很多validator都会跑一个backup，因为validator不能下线。如果主程序和backup都跑的话，是会出现发送两个attestation的这个情况（如一个epoch发送两个attestation），该情况是没有办法从protocol层面限制的，因为attestation发送出去，是让不同的人收集的，只要验证者签名合法的，就会被其他人收集起来，其他人没有能力判断发送的attestation是否重复
 
-  - Committees委员会 (验证者子集) ：**同步委员会 (sync committee)** 由随机分配**（RANDAO）**至少128名验证者组成的小组，一个验证者在一个epoch内只能在一个委员会中，每个epoch里，各个委员会被均分给每个slot（1slot - 1 committee），每27小时更新一次。
+  - Committees委员会 (验证者子集) ：**同步委员会 (sync committee)** 由随机分配（RANDAO）至少128名验证者组成的小组，一个验证者在一个epoch内只能在一个委员会中，每个epoch里，各个委员会被均分给每个slot（1slot - 1 committee），每27小时更新一次。
 
     这些被随机选中的验证者，除了其验证者本职工作以外，还将对**Chain head**进行签名（如遇分叉情况，依据LMD GHOST分叉选择算法，于chain header timing时期）。
 
@@ -136,9 +138,9 @@ type BlockChain struct {
 
   - 奖励：验证者以 32 ETH 用于作为“抵押品”。
 
-    - 当验证者进行的 **LMD-GHOST 投票**和 **FFG 投票**与大多数其他验证者一致时，那么验证者就会获得证明奖励。
+    - 当验证者进行的 **LMD-GHOST 投票**和 **FFG 投票**与大多数其他验证者一致时，那么验证者就会获得证明奖励（认证奖励 = 7/8 x 基础奖励 x (1/[区块纳入延迟](https://ethereum.org/zh/developers/docs/consensus-mechanisms/pos/attestations/))）。
 
-    - 当验证者被选中作为“**区块提议者”(block proposer) **时，如果其提议的区块被“敲定”， 那么该验证者也将获得奖励。此外，区块提议者也可以通过将有关其他验证者行为不当的证明打包进自己提议的区块中，从而增加自己获得的奖励（“报酬”）。
+    - 当验证者被选中作为“区块提议者”(block proposer) 时，如果其提议的区块被“敲定”， 那么该验证者也将获得奖励。此外，区块提议者也可以通过将有关其他验证者行为不当的证明打包进自己提议的区块中，从而增加自己获得的奖励（通常每个验证者大约有0.1 ETH奖励）。
 
       > block proposer的reward中包括交易的gas priority fee（execution layer），还有consensus layer中专门有一个incentive layer，proposer出块会有奖励（类似对应PoW时的miner挖出区块奖励，PoS之后的出块奖励变到这里，**数量是其区块中包含总奖励的1/7**）
       >
@@ -152,13 +154,18 @@ type BlockChain struct {
       - 验证者错过了进行 LMD-GHOST 投票，则不会受到惩罚，只是错过了本可以通过对链头进行投票而获得的奖励。
 
     - 罚没Slashings：验证者发生严重行为(如下列举)，会导致验证者被强制从网络中**移除**，其质押的 ETH 的 1/64 (最高可达 0.5 ETH) 将立即被销毁，然后开始一个**为期 36 天的移除期**，在此期间，验证者的质押金将逐渐被削减；且在这段期间的中间点 (**第18天**)，该验证者还将受到额外的惩罚，惩罚大小将与此次罚没事件发生之前的 **36 天内**所有被罚没的验证者的 ETH 质押总额成比例（**串谋惩罚correlation penalty**）
-
-      - 在同一个 slot 提议和签名两个不同的区块。
-      - 对“环绕”某个区块的另一个区块进行证明 (实际上就是更改区块链历史)。
-      - 通过对同一个区块的两个候选区块进行“双重投票”(double voting)。
+      > [罚没器（Slasher）](https://www.zhihu.com/question/432805921/answer/1605154613)是指一个单独的软件，其主要目的是检测可罚没的事件。你可以把罚没器（Slasher）想象成以太坊2.0网络的“警察”，由于检测恶意消息所需的额外数据和进程，通常这些罚没器是独立于信标节点运行的。为了检测可罚没的消息，罚没器记录网络上每个验证器的证明和提议历史记录，并将该历史记录与广播的内容交叉引用，以找到可罚没的消息。
+      > 通常在检测到罚没后，奖励会立即发给提议者(block proposer)，而不是发给运行罚没器的验证者，即运行一个罚没器并不意味着有利可图，本质上，运营罚没器相当于一种利他行为。
+      - 双重投票(double voting)：验证者在同一个 slot **证明**两个冲突的区块，也意味着可能试图造成链的分叉。注：简单地为相同区块投票两次，并不会遭到罚没。
+      - 验证者投出的投票[“包围”（surround）](https://github.com/protolambda/eth2-surround)或被之前的投票“包围”某个区块的另一个区块进行证明 (实际上就是试图更改区块链历史)。
+      - 验证者在同一个slot中使用不同的root（内部数据的哈希）**提议**两个冲突的区块。意味着会很容易创建不必要的分叉，或造成混乱。注：简单地提出相同的区块两次，并不会遭到罚没。
 
       > 1、对于节点来说，无论有意无意，如果有对应行为上链并触发slashing，那就是无法补救的了
       >
-      > 2、protocol层和程序层都没有办法限制恶意节点多发attestation，有的方式只有合法节点的打包“举报”（事实上会有很多节点在盯着，因为有奖励）。但除了slashing罚款，只要所谓的“声明无效证明”，但已经造成的链上既定事实是没办法改变的。所以，对于恶意节点来说，成本只有32ETH，但成功的几率权衡巨大的获利，还是可能预见的，所以很多攻击者的做法就是集中发送很多相互冲突的attestation
+      > 2、protocol层和程序层都没有办法限制恶意节点多发attestation，有的方式只有合法节点的打包“举报”（事实上会有很多节点在盯着，因为有奖励）。但除了slashing罚款，只有所谓的“声明无效证明”，但已经造成的链上既定事实是没办法改变的。所以，对于恶意节点来说，成本只有32ETH，但成功的几率权衡巨大的获利，还是可能预见的，所以很多攻击者的做法就是集中发送很多相互冲突的attestation
+      >
+      > 3、去重机制: 在p2p网络传播阶段，节点会拒收相同 hash 的attestation。但如果哈希不一样，节点也不会检查是谁提出的而全部上链
+      > 
+      > 4、Selfish Mining: 以太坊PoS解决方案：[Proposer Boost & Honest Reorgs](https://ethresear.ch/t/selfish-mining-in-pos/15551)
 
     - Inactive Leak机制：如果信标链已经有超过 4 个 epoch 都没有被敲定时触发（超过 1/3 的验证者离线或未能提交证明的证明，即不可能有 2/3 的绝对多数验证者来敲定检查点）。**逐渐削减不活跃的验证者的 ETH 质押金，直到这些验证者控制的质押金少于网络中总质押金的 1/3，从而允许剩余的活跃验证者对区块链进行敲定**。无论这些不活跃的验证者数量有多大，剩余的验证者最终都将控制 >2/3 的总质押金。

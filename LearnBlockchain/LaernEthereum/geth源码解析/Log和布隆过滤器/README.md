@@ -5,7 +5,7 @@
 ```go
 // core/types/log.go
 type Log struct {
-  // 1、consensus层结构
+  // 1、通用核心结构
   // 发出日志事件的合约地址
   Address common.Address `json:"address" gencodec:"required"`
   // 最多可以有 4 个主题(topic)。每个主题正好是 32 个字节

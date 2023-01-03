@@ -10,7 +10,7 @@
 
 世界状态(state)由无数的账户信息组成，每个账户均存在一个唯一的账户信息。账户信息中存储着账户余额、Nonce、合约哈希、账户状态等内容，每个账户信息通过账户地址影射。 从创世状态开始，随着将交易作为输入信息，在预设协议标准（条件）下将世界态推进到下一个新的状态中。
 
-![以太坊技术与实现-状态](https://img.learnblockchain.cn/book_geth/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0-%E5%9B%BE2019-12-7-23-35-20!de?width=600px)
+![image](https://user-images.githubusercontent.com/93460127/226185587-f1c86a8b-6a58-4760-bc93-ca78d0d1fc67.png)
 
 #### 2）[StateDB](https://learnblockchain.cn/books/geth/part3/statedb.html)
 
@@ -92,7 +92,7 @@ func (s *StateDB) Commit(deleteEmptyObjects bool) (common.Hash, error) {
 
 ```
 
-![以太坊技术与实现-图以太坊 State 库读写关系](https://img.learnblockchain.cn/book_geth/%E4%BB%A5%E5%A4%AA%E5%9D%8A%E6%8A%80%E6%9C%AF%E4%B8%8E%E5%AE%9E%E7%8E%B0-%E5%9B%BE2019-12-18-21-56-7!de?width=600px)
+![image](https://user-images.githubusercontent.com/93460127/226186107-6e2732c5-5cc7-4a7d-9184-f583505ebc52.png)
 
 > 底层物理存储层DB只有 LevelDB，为了提高读写性能，使用 cachingDB 对其进行一次封装，使用了LRU缓存淘汰算法。
 >

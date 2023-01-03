@@ -51,7 +51,7 @@
 > 1. 初始化server的字段
 > 2. 设置本地节点setupLocalNode
 > 3. 设置监听TCP连接请求setupListening
-> 4. 设置节点发现（setupDiscovery）
+> 4. 设置节点发现（setupDiscovery）, 利用[KAD算法](https://zhuanlan.zhihu.com/p/43340851)，其[源码实现分析](https://blog.csdn.net/lj900911/article/details/84138361)
 > 5. 设置最大可以主动发起的连接为50/3
 > 6. srv.run(dialer) 发起建立TCP连接请求
 
@@ -74,8 +74,10 @@ func (srv *Server) Start() (err error) {
       }
    }
   
-  // 3.根据用户参数开启`节点发现`功能，基于kademlia（KAD）算法
-  // 使本地节点得知其他节点的信息，进而加入到p2p网络中
+   // 3.根据用户参数开启`节点发现`功能，基于kademlia（KAD）算法
+   // 使本地节点得知其他节点的信息，进而加入到p2p网络中
+   // 注意：KAD算法需要种子节点来引导，从leveldb中随机选取若干种子节点（新节点第一次启动时，使用启动参数或源码中提供的启动节点作为种子节点）
+   // 其实现细节位于：p2p/discover/table.go
    if err := srv.setupDiscovery(); err != nil {
       return err
    }

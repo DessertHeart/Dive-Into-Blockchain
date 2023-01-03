@@ -2,7 +2,7 @@
 
 ### 交易Transaction
 
-![以太坊交易数据结构](https://img.learnblockchain.cn/2019/04/24_transaction-struct.png!de)
+![image](https://user-images.githubusercontent.com/93460127/226186233-d0b4c772-4e42-448b-b45c-e6e66480bf0d.png)
 
 #### 1）Transaction的定义
 

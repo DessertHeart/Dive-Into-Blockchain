@@ -14,7 +14,7 @@
 + ### 📟[深入以太坊PoS，go-ethereum源码分析](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/main/LearnBlockchain)
   + [Dapp开发入门](./LearnBlockchain/LearnEthereum/Dapp%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8)
   + [Ethereum架构](./LearnBlockchain/LearnEthereum/EVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84)
-  + [go-ethereum源码深度解析](./LearnBlockchain)
+  + [go-ethereum源码深度解析](./LearnBlockchain/LearnEthereum)
 + ### 🧮[入门ZK，零知识证明系统剖析](https://github.com/DessertHeart/Dive-Into-Blockchain/tree/master/LearnBlockchain/LearnZero_Knowledge)
   + [零知识证明基本概念](./LearnBlockchain/LearnZero_Knowledge/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5)
   + [承诺方案Commitment](./LearnBlockchain/LearnZero_Knowledge/%E6%89%BF%E8%AF%BA%E6%96%B9%E6%A1%88)

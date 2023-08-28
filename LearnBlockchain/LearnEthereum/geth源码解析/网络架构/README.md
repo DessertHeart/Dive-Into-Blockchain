@@ -52,8 +52,11 @@
 > 2. 设置本地节点setupLocalNode
 > 3. 设置监听TCP连接请求setupListening
 > 4. 设置节点发现（setupDiscovery）, 利用[KAD算法](https://zhuanlan.zhihu.com/p/43340851)，其[源码实现分析](https://blog.csdn.net/lj900911/article/details/84138361)
-> 5. 设置最大可以主动发起的连接为50/3
-> 6. srv.run(dialer) 发起建立TCP连接请求
+> 5. 设置最大可以主动发起的连接遵循50/3规则
+>    > 最大主动连接数量：这意味着节点会尝试主动连接到其他节点，直到它达到这个限制。在许多以太坊客户端中，这个值默认是 50。
+>    > 
+>    > 保留（reserved）：这个值表示即使达到了最大主动连接数量，还有多少连接是“保留”的，可以被特定的节点（例如，你事先知道并信任的节点）使用。在很多以太坊客户端中，这个值默认是 3。
+> 7. srv.run(dialer) 发起建立TCP连接请求
 
 ```go
 func (srv *Server) Start() (err error) {

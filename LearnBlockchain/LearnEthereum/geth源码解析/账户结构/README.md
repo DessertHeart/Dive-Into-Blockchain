@@ -118,6 +118,12 @@ func (ks *KeyStore) NewAccount(passphrase string) (accounts.Account, error) {
   　　取上一步hash值的**后20bytes**，加上前缀0x，即以太坊地址：
 
   　　`0x 1016f75c54c607f082ae6b0881fac0abeda21781`
+    > 比特币地址生成过程，在上述第三步之后还有其他操作：
+    > 
+    > 4. 计算RIPEMD-160哈希: 对上一步得到的SHA-256哈希值执行RIPEMD-160哈希运算。这将会得到一个20字节的值。
+    > 5. 添加地址版本前缀: 为了区分主网和测试网的地址，会在RIPEMD-160哈希的前面添加一个字节的版本。例如，比特币主网地址的版本前缀是0x00。
+    > 6. 计算双重SHA-256哈希校验和: 对前一步得到的结果执行两次SHA-256哈希，并取哈希的前4个字节作为校验和。
+    > 7. 组合并进行Base58编码: 将前缀、RIPEMD-160哈希和校验和组合在一起，然后使用Base58编码得到比特币地址。
 
 - **[签名Sign](https://learnblockchain.cn/books/geth/part3/sign-and-valid.html)**（65字节）
 

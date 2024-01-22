@@ -128,8 +128,10 @@ KZG承诺是一个密码学技术，大致原理如下：
      - 商多项式 𝑞(𝑋) = $\frac{𝑓(𝑋)−𝑦}{ 𝑋−𝑧}$ , 𝜋 = 𝐶𝑜𝑚𝑚𝑖𝑡 (𝑐𝑘; 𝑞(𝑋)) = $[𝑞(𝛼)]_1$ 
 
        > 商多项式：多项式/多项式 仍 = 合法多项式（不含有余数等等）。即通过验证商多项式是有效的，论证已得到了正确解，例如：
-       
-       <img width="387" alt="image" src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/58cae40c-6922-48f4-af00-8f7bbb26bb42">
+
+<div align=center>
+<img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/58cae40c-6922-48f4-af00-8f7bbb26bb42" style="width:30%;">
+</div>
 
 
    - 𝑉𝑒𝑟𝑖𝑓𝑦 (𝑣𝑘, 𝐶, 𝑧, 𝑦, 𝜋) → {0,1}

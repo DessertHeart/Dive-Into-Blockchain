@@ -287,7 +287,11 @@ $f_2(X_1,X_2,X_1^{next} ,X_2^{next})=8−(5+3)=0$
 
   -  构建**执行踪迹表格**
 
-    <img src="/Users/dazso/Library/Application Support/typora-user-images/image-20240122210357730.png" alt="image-20240122210357730" style="zoom: 33%;" />
+
+<div align=center>
+<img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/7f43c943-b30a-4a13-9f91-43e1c6ed7e86" style="width:50%;">
+</div>
+
 
   -  用多项式描述表格中各行/列间的数学关系 
 
@@ -297,9 +301,9 @@ $f_2(X_1,X_2,X_1^{next} ,X_2^{next})=8−(5+3)=0$
 
     > 哪怕仅一处错误的执行轨迹，会被纠错码放大，以至于与原执行轨迹几乎完全不同
 
-    <img src="/Users/dazso/Library/Application Support/typora-user-images/image-20240122210417088.png" alt="image-20240122210417088" style="zoom: 50%;" />
-
-     
+<div align=center>
+<img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/fec0efa0-9580-4c57-9e48-ad95ea13fa8e" style="width:30%;">
+</div>    
 
   - 扩展至更大的域 
 

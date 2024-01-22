@@ -348,6 +348,9 @@ Plonk的**基本多项式/电路表达**由加法门/乘法门以及一些常量
 
 > 消除了“有毒废料”（toxic waste）问题：如果初始设置被破坏，整个系统的安全性可能会受到威胁。
 
-<img src="https://lh7-us.googleusercontent.com/87-60bkUCSt7m0z_X5evQWFZy-rfBnHJgdiOqG_oONZJNXW1j0MoJIzdZepZVAXD1dxmvQ1osKTBg64ExuXNV4XOp3FgpKQ1D7Btb8xs1BuYkhJk8dtMnE0v2DD8cVRKvndTXcDERIq4lAl5z4TcfVYIrw=s2048" alt="img" style="zoom: 33%;" />
+<div align=center>
+<img src="https://lh7-us.googleusercontent.com/87-60bkUCSt7m0z_X5evQWFZy-rfBnHJgdiOqG_oONZJNXW1j0MoJIzdZepZVAXD1dxmvQ1osKTBg64ExuXNV4XOp3FgpKQ1D7Btb8xs1BuYkhJk8dtMnE0v2DD8cVRKvndTXcDERIq4lAl5z4TcfVYIrw=s2048" style="width:50%;">
+</div>
+
 
 其中，Accumulation Scheme 是通过给 accumulator（累加器）添加proofs（这些proofs是关于累加器的先前状态的），使得我们可以通过检查累加器的当前状态来检查所有先前证明是否正确（通过归纳）。

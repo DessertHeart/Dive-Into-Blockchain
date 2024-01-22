@@ -120,6 +120,7 @@ Plonk的**基本多项式/电路表达**由加法门/乘法门以及一些常量
 <div align=center>
 <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/a2b7b444-4a1b-4d25-bd42-428fcee5cc35" style="width:60%;">
 </div>
+
 #### 2.PLONKish中的证明过程
 
 1. Public Input：ZeroTest

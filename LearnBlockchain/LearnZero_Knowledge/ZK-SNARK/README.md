@@ -1,5 +1,9 @@
 # **ZK-SNARKs**
 
+## 一、基本概念
+
+### a.定义
+
 *更多细节可参照snark.js的README文件*
 
 > 首个使用ZK-SNARK技术的项目：[Zcash](https://z.cash/technology/zksnarks/)，提供完全的支付保密性的去中心化网络。
@@ -17,7 +21,7 @@ $x$ 为公开输入， $w$ 为隐私输入， $y$ 是公开输出， $π$ 是零
 
 > $f$ 为关键的数学难题抽象的多项式， $λ$ 为安全变量，将 $f$ 以通用逻辑不同应用拆为两部分，分别面向Prover和Verifier，
 
-#### a.特点
+### b.特点
 
 - **ZK**：零知识，隐藏输入
 
@@ -33,16 +37,20 @@ $x$ 为公开输入， $w$ 为隐私输入， $y$ 是公开输出， $π$ 是零
 
 - **AR**gument of **K**onwledge：知识**论证**，可以向验证者证明你知道输入
 
-#### b.实现过程（在zk中，1&2称为zk前端，3&4称为zk后端 ）
+### b.实现过程
 
-1. 从高层次角度出发，将问题（一般为计算型问题，如图同构、离散对数等则一般有特殊设计的更为高效的方法，往往牵扯单独领域而不是走通用电路这一套）转换为要隐藏输入的函数
+> 在零知识证明领域，1 & 2称为zk前端，3  &4称为zk后端
 
-2. 将该函数转换为等效的描述电路的(R1CS/算术电路/布尔电路)计算模型
+1. 从高层次角度出发，将待解决问题转换为要隐藏输入的函数
+
+   > 一般为计算型问题，如图同构、离散对数等则一般有特殊设计的更为高效的方法，往往牵扯单独领域而不通过通用电路
+
+2. 将该函数转换为等效的描述电路的**计算模型(R1CS/算术电路/布尔电路)**
 
    - **算术电路**：一堆**素数域**元素中 + 和 $*$ 操作
    - 简化：形式为 $x_i + x_j = x_k$ 或 $x_i * x_j = x_k$ 的方程
 
-3. 将R1CS的**可满足性问题**，根据不同框架的zk System，进行算术化转换成多项式（如QAP）
+3. 基于计算模型（如R1CS），根据不同框架的ZK System，进行算术化转换成多项式（如QAP）
 
    > 可满足性问题（Boolean Satisfiability Problem），即数学难题，简称SAT问题。源于数理逻辑中经典命题逻辑关于公式的可满足性概念，是理论计算机科学中的一个重要问题，也是第一个被证明的**NP-Complete问题**。其表达为复杂的多项式，该多项式可以用来生成ZK-Proof。
    >
@@ -52,41 +60,79 @@ $x$ 为公开输入， $w$ 为隐私输入， $y$ 是公开输出， $π$ 是零
    > - 不可满足： $F$ = $A$ & ~ $A$  ( $F$ == $false$ )
 
    在 R1CS 表示中，验证者必须检查许多约束（几乎电路的每一根线都有一个约束）。[二次算术程序 (Quadratic Arithmetic Program，QAP)](https://snowolf0620.xyz/index.php/zkp/435.html)可以 “将所有这些约束捆绑为一个电路表示”。
-   
-4. 利用不同框架的承诺方案进行证明生成最终ZKP
+
+4. 利用不同 ZK System 生成 Proof。
+
+   > 注意不是所有的都需要承诺，比如Groth16
+
+5. Verify
 
 
-#### c.PLONK协议
+## 二、证明系统分类
 
 > 前言：证明系统分类
 
 现代 SNARKs 的设计方法大多为模块化的，使用代数全息证明（Algebraic Holographic Proofs, AHPs）作为信息论组件。以下证明系统堆栈，都从 R1CS 算术化开始。不同的是，之前在 “算术化” 章节讲到的 QAP 是走linear PCP（Probabilistically Checkable Proof , PCP），Groth16正是用的该方法，其为当今热门算法之一，因为已知Groth16是目前生成证据最小的算法。
 
-Plonk是属于 poly IOP (交互式Oracle证明，Interactive Oracle Proofs, IOPs) 范式，定义的多项式表达方式与Groth16不一样，属于两种并行的方式。
-
 <img src="https://zkshanghai.xyz/assets/taxonomy.9fb84bf2.png" alt="img" style="zoom:50%;" />
 
-[Plonk算法](https://eprint.iacr.org/2019/953.pdf)，Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge的简称，实现了Universal的零知识证明算法底层原理是多项式承诺。所谓Universal，初始可信设置(SRS)只需要一次，而且可以在原有基础上直接迭代。相比而言，Groth16的每一个电路都需要单独的可信设置(Trusted Setup)。
+- Polynomial IOP（Interactive **Oracle** Proofs）:
+  - IP-based (交互式证明系统)：证明模型，其中证明者（Prover）和验证者（Verifier）之间进行交互，以证明某个陈述的正确性。通常，这些证明可能需要多轮交互，每一轮中，验证者可能根据之前的信息提出新的问题。
+  - MIP-based (多重交互式证明系统)：存在多个证明者，它们共同向单个验证者证明某个陈述的正确性。这些证明者可能会同时与验证者交互，但不能互相通信。通过增加证明者的数量来提高安全性和可信度。
+  - Constant Round：指证明的交互轮数是固定的，与证明的规模或复杂性无关。换句话说，无论要证明的陈述多么复杂，交互的轮数都保持不变。这对于实际应用非常重要，因为它保证了协议的效率，使其能够在实践中被高效地实现和使用。
 
-##### ①电路原理
+- Polynomial Commitment Scheme
+
+  > Polynomial IOP 与 Polynomial Commitment Scheme区别：仅仅是交互方式的区别，即多项式 IOP （可以通过 Fiat-Shamir 变换转换成非交互式的commitment scheme）是交互式的，而多项式承诺方案通常是非交互式的。
+
+  证明者生成一个承诺，该承诺然后可以被用来生成非交互式的证明，验证者可以独立地、无需与证明者进一步交互的验证这个证明。
+
+  1. **生成承诺**：证明者首先对某个多项式进行承诺，这个承诺是一个加密的值，它代表了该多项式，但不透露具体的系数或者形式；
+  2. **构建证明**：证明者根据需要证明的属性（例如，某个特定点上的多项式值）构建一个证明。这个证明是基于承诺和可能的其他公共信息（例如，使用的哈希函数）生成的；
+  3. **验证证明**：验证者使用证明者提供的证明和承诺来验证多项式的某个特定属性。由于整个过程是非交互式的，验证者不需要与证明者进行任何进一步的交流。
+
+- 线性 PCP（Probabilistically Checkable Proofs）：
+
+  在不完全检查整个证明的情况下，通过随机抽样某些部分来验证证明的正确性，从而显著降低验证的复杂度。“线性”：涉及的计算和验证过程是线性的，同时也意味着证明的每个部分都与原始计算中的线性函数相关联。
+
+> 通用(Universal)零知识证明发展概述：
+
+1. **阶段一**：早期的古典零知识证明系统通常是为特定类型的问题量身定做的，不同应用问题的设计完全不可复用;
+
+2. **阶段二**：例如 Groth16 和 Pinocchio 协议，相对于早期的零知识证明系统，提供了一种更通用的框架。可以适用于任何用算术电路表示的计算问题，确实可以被视为更universal，但他们并不是常说的universal zero knowledge protocol，因为它们都需要一个特定的受信任设置（trusted setup）阶段，**这个受信任设置阶段对于每个不同的应用或电路都是唯一的**，因此，针对每一个不同的电路，就需要进行一次信任设置，在这个阶段的任何点被破坏，整个系统的安全性就可能受到威胁;
+
+3. **阶段三(通用零知识证明)**：例如PLONK 协议就是一个通用（Universal）的零知识证明系统，尽管它确实需要一次性的受信任设置（trusted setup）。PLONK 的关键特点在于其“通用性”：一旦进行了一次受信任设置，就可以用于多种不同的计算或应用，而无需针对每个新应用重新进行设置。此外，例如 Zcash团的设计的 [Halo2 协议](https://electriccoin.co/blog/ecc-releases-code-for-halo-2/)，消除了trusted setup阶段实现了non-trusted setup的零知识证明系统。
+
+## 三、例1：[PLONK协议](https://eprint.iacr.org/2019/953.pdf)
+
+Permutations over Lagrange-bases for Oecumenical Noninteractive arguments of Knowledge的简称，实现了Universal的零知识证明算法底层原理是多项式承诺。所谓Universal，初始可信设置(SRS)只需要一次，而且可以在原有基础上直接迭代。相比而言，Groth16的每一个电路都需要单独的可信设置(Trusted Setup)。
+
+Plonk是属于 poly IOP (交互式Oracle证明，Interactive Oracle Proofs, IOPs) 范式，定义的多项式表达方式与Groth16不一样，属于两种并行的方式。
+
+### a.电路原理
 
 > 更多可参照 Vitalik Blog： [Understanding PLONK](https://vitalik.ca/general/2019/09/22/plonk.html)
 
-Plonk的**基本多项式/电路表达**由加法门/乘法门以及一些常量组成：
+#### 1.Plonkish：把一个程序变成Plonk多项式
+
+Plonk的**基本多项式/电路表达**由加法门/乘法门以及一些常量组成，下式描述的过程称为：。
 
 <div align=center>
 <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/a2b7b444-4a1b-4d25-bd42-428fcee5cc35" style="width:60%;">
 </div>
+#### 2.PLONKish中的证明过程
 
-PLONK算法采用两种**约束**关系描述整个电路：
+1. Public Input：ZeroTest
+2. 门约束（加法门/乘法门）：ZeroTest
+3. [线约束 (拷贝约束)](https://learnblockchain.cn/article/1670)：Permutation Test
 
-1. 加法门/乘法门约束 
+**门和门之间的“共享”连接**，因为加法门和乘法门只描述单个门的依赖关系，所以要加上Copy约束才能描述确定的完整电路。
 
-2. [拷贝约束 (连线约束) ](https://learnblockchain.cn/article/1670)
+> 🌟值得一提的是，Plonk算法的关键是Plonkish的证明过程，需要引入Polynomial Commitment，通过引入不同的承诺方案Commitment可以使整个ZK系统有不同的性质，这也是相关科研论文的一个出发点，而最典型的PLONK就是使用的KZG承诺方案的。这里也可以发现，PIOP和Polynomial Commitment是相互结合使用的。
+>
+> 同时需要注意，证明过程中，Prover会发多个多项式给Verifier，过程是交互式的，故而归属于PIOP
 
-   **拷贝约束，其实就是门和门之间的“共享”连接**，因为加法门和乘法门只描述单个门的依赖关系，所以要加上Copy约束才能描述确定的完整电路。
-
-##### ②手撕Plonk框架：勾股数问题为例论证过程
+### b.手撕Plonk：以勾股数问题为例论证过程
 
 - **Step1：准备工作**
 
@@ -201,49 +247,44 @@ PLONK算法采用两种**约束**关系描述整个电路：
       <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/415995c6-230c-4b6e-99ad-3e4bb1c5d083" style="width:15%;">
       </div>
 
+- 计算**单位根** $H$ （定义见高等密码学运算章节）
 
-     - 计算**单位根** $H$ （定义见高等密码学运算章节）
+   单位根在Plonk中的应用为： $𝑛$ **需要大于等于约束向量的长度**。这里长度是4，故需解出4次单位根。
 
-       单位根在Plonk中的应用为： $𝑛$ **需要大于等于约束向量的长度**。这里长度是4，故需解出4次单位根。
+> 原始域为 $𝔽_{101}$  ，通过循环子群的阶调整至 $𝔽_{17}$ （群中元素总共17个）
 
-       > 原始域为 $𝔽_{101}$  ，通过循环子群的阶调整至 $𝔽_{17}$ （群中元素总共17个）
+   <div align=center>
+   <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/c42d09eb-7daf-45f4-b057-14fe42745eef" style="width:30%;">
+   </div>
 
-     
-       <div align=center>
-       <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/c42d09eb-7daf-45f4-b057-14fe42745eef" style="width:30%;">
-       </div>
+  即得到 $H: \{1, 4, 16, 13\}$
 
+ - 计算**陪集(coset)**
 
-       即得到 $H: \{1, 4, 16, 13\}$
+   陪集为子群衍生出的概念，设群 $G$ ，若 $H$ 是 $G$ 的一个非空子集且同时 $H$ 与相同的二元运算 * 亦构成一个群，则 $H$ 称为 的一个**子群**。在此基础上，用群 $G$ 的任一元素 $a$ 和子群 $H$ 的任一元素运算构成的集合 $aH ∈ {\{a*h|h∈H\}}$ 就称为**陪集**。（注意因为运算不一定满足交换律，故有**左、右陪集之分**）， $aH = Ha$ 则称 $H$ 关于 $a$ 在 $G$ 中的陪集 $a_{[H]}$， $a$ 为代表元。
+   >  $*$ 为运算省略符号
 
-     - 计算**陪集(coset)**
+   陪集的性质：
 
-       陪集为子群衍生出的概念，设群 $G$ ，若 $H$ 是 $G$ 的一个非空子集且同时 $H$ 与相同的二元运算 * 亦构成一个群，则 $H$ 称为 的一个**子群**。在此基础上，用群 $G$ 的任一元素 $a$ 和子群 $H$ 的任一元素运算构成的集合 $aH ∈ {\{a*h|h∈H\}}$ 就称为**陪集**。（注意因为运算不一定满足交换律，故有**左、右陪集之分**）， $aH = Ha$ 则称 $H$ 关于 $a$ 在 $G$ 中的陪集 $a_{[H]}$， $a$ 为代表元。
-       >  $*$ 为运算省略符号
+   1. 陪集必不是子群，陪集与对应的子群没有公共元素
+   2. 陪集中没有重复元素
+   3. 不同的陪集没有公共元素，也就是说，利用陪集可以由子群生成一个新的子集。
 
-       陪集的性质：
+   <div align=center>
+   <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/b26c33d5-f949-4957-bfd4-0ec49d2df03a" style="width:15%;">
+   </div>
 
-       1. 陪集必不是子群，陪集与对应的子群没有公共元素
-       2. 陪集中没有重复元素
-       3. 不同的陪集没有公共元素，也就是说，利用陪集可以由子群生成一个新的子集。
+  *PS：这里也是该原始域的优秀特性之一，很容易就找到了满足的（即元素不重叠的）*
 
-       
-       <div align=center>
-       <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/b26c33d5-f949-4957-bfd4-0ec49d2df03a" style="width:15%;">
-       </div>
+ - 多项式插值法转换为多项式
 
+   > 注意：插值方法有很多种，这里使用多项式插值(结果不唯一)
 
-       *PS：这里也是该原始域的优秀特性之一，很容易就找到了满足的（即元素不重叠的）*
+   这里，例如 $\vec{σ_1} =  \vec{a} =\{a_1, a_2, a_3, a_4\}=\{2, 8, 15, 3\}$，同理 $\vec{σ_2}为 \vec{b} ，\vec{σ_3} 为 \vec{c}$  
 
-     - 多项式插值法转换为多项式
-
-       > 注意：插值方法有很多种，这里使用多项式插值(结果不唯一)
-
-       这里，例如 $\vec{σ_1} =  \vec{a} =\{a_1, a_2, a_3, a_4\}=\{2, 8, 15, 3\}$，同理 $\vec{σ_2}为 \vec{b} ，\vec{σ_3} 为 \vec{c}$  
-
-       <div align=center>
-       <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/1492a475-6fbd-4f55-947a-6f02fffe9658" style="width:30%;">
-       </div>
+   <div align=center>
+   <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/1492a475-6fbd-4f55-947a-6f02fffe9658" style="width:30%;">
+   </div>
 
 
 - **Step3：证明与验证(交互式)**
@@ -298,3 +339,15 @@ PLONK算法采用两种**约束**关系描述整个电路：
        带入 $s$ ，先进行计算 $[q_M]、[q_L]$……
 
     2. 验证算法(11步，比较复杂，可看细节链接，此处不展开)
+
+
+
+## 四、例2：[Halo2 协议](https://electriccoin.co/blog/ecc-releases-code-for-halo-2/)
+
+基于椭圆曲线上的离散对数构建的零知识证明协议，其最大的优势是**无需可信设置**。即 Halo 2 不需要一个可信的初始设置过程。这意味着在生成证明系统的参数时，不需要依赖一个可信第三方来确保系统的安全性，其核心流程如图所示。
+
+> 消除了“有毒废料”（toxic waste）问题：如果初始设置被破坏，整个系统的安全性可能会受到威胁。
+
+<img src="https://lh7-us.googleusercontent.com/87-60bkUCSt7m0z_X5evQWFZy-rfBnHJgdiOqG_oONZJNXW1j0MoJIzdZepZVAXD1dxmvQ1osKTBg64ExuXNV4XOp3FgpKQ1D7Btb8xs1BuYkhJk8dtMnE0v2DD8cVRKvndTXcDERIq4lAl5z4TcfVYIrw=s2048" alt="img" style="zoom: 33%;" />
+
+其中，Accumulation Scheme 是通过给 accumulator（累加器）添加proofs（这些proofs是关于累加器的先前状态的），使得我们可以通过检查累加器的当前状态来检查所有先前证明是否正确（通过归纳）。

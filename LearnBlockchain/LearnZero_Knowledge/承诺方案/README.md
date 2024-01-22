@@ -4,8 +4,6 @@
 
 > **IOP**(Interactive Oracle Proof)：理想协议，是信息论里的概念，无界算力保证零知识和可靠性，证明者提供与挑战者与M相关联的函数，但验证者只能通过放一些值确认函数是否正确，以验证了证明在确实拥有什么信息，这个过程已经隐藏了关键信息。（通过证明，非论证，实现了完美零知识）
 
-
-
 **定义**：承诺方案是 PPT 算法的元组 $τ$ = (𝑆𝑒𝑡𝑢𝑝, 𝐶𝑜𝑚𝑚𝑖𝑡, 𝑂𝑝𝑒𝑛)，其中：
 
 > 分号";"后面表示的为非公开元素
@@ -13,6 +11,8 @@
 1. 𝑆𝑒𝑡𝑢𝑝($1^𝜆$) → 𝑝𝑝： 采用**安全参数 𝜆**（一元）并生成公共参数 𝑝𝑝；
 2. 𝐶𝑜𝑚𝑚𝑖𝑡(𝑝𝑝; 𝑚) → (𝐶; 𝑟)： 获取**秘密消息 𝑚**（信息域 𝑚 ∈ $M$） 并输出**公开承诺 𝐶** 和（可选）秘密打开**提示 𝑟（可能为随机数）**
 3. 𝑂𝑝𝑒𝑛(𝑝𝑝, 𝐶; 𝑚, 𝑟) → 𝑏 ∈ {0,1}： 利用打开提示 𝑟，验证承诺 𝐶 对消息 𝑚 的打开，
+
+## 一、Sigma协议
 
 零知识证明过程中Prover一般通过**承诺Commitment**来论证，多采用**sigma protocol**的形式，包含两个阶段
 
@@ -29,7 +29,7 @@
 <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/6b731a56-5822-4c71-9123-fd18fd63c05e" style="width:66%;">
 </div>
 
-## a.Pedersen承诺
+## 二、例1：Pedersen承诺
 
 > [m]表示单独一个数字
 
@@ -55,9 +55,7 @@ Pedersen 承诺是一个在**消息空间 $𝔽_𝑞$** 上具有绑定性和隐
 
   = 𝐶𝑜𝑚𝑚𝑖𝑡(𝑚 + 𝑚′ , 𝑟 + 𝑟′)
 
-
-
-## b.向量Pedersen承诺
+## 三、例2：向量Pedersen承诺
 
 > 实现了向量版本，很关键
 
@@ -71,9 +69,7 @@ Pedersen 承诺是一个在**消息空间 $𝔽_𝑞$** 上具有绑定性和隐
    - 证明者 Prover 揭示 $\vec{𝑚}$ 和 𝑟 
    - 验证者 Verifier 检查 𝐶
 
-
-
-## c.[双线性映射](https://www.bilibili.com/video/BV11M411m7Qq/?spm_id_from=333.337.search-card.all.click&vd_source=0dd037413d496f35de84d58a72548d41)
+## 四、例3：[双线性映射](https://www.bilibili.com/video/BV11M411m7Qq/?spm_id_from=333.337.search-card.all.click&vd_source=0dd037413d496f35de84d58a72548d41)
 
 > 如基于双线性paring的[bls12-381曲线](http://aandds.com/blog/bls.html)（ETH beacon BLS签名用到该曲线，**但不是一回事**）
 
@@ -87,9 +83,7 @@ Pedersen 承诺是一个在**消息空间 $𝔽_𝑞$** 上具有绑定性和隐
 - 非退化: 
   - 对于生成元 $𝐺_1$ ∈ $𝔾_1$ 和 $𝐺_2$ ∈ $𝔾_2$， $𝐺_𝑇 := 𝑒(𝐺_1, 𝐺_2) ∈ 𝔾_𝑇$  是一个生成元
 
-
-
-## d.[KZG承诺](https://dankradfeist.de/ethereum/2021/10/13/kate-polynomial-commitments-mandarin.html)
+## 五、例4：[KZG承诺](https://dankradfeist.de/ethereum/2021/10/13/kate-polynomial-commitments-mandarin.html)
 
 > 论证实现完美零知识证明
 
@@ -123,7 +117,6 @@ KZG承诺是一个密码学技术，大致原理如下：
    > 
    ><img width="416" alt="image" src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/c473fd80-f087-4734-b095-628d6495645d">
    
-
 3. 𝑂𝑝𝑒𝑛(𝑠𝑟𝑠, 𝐶, 𝑧, 𝑦; 𝑓(𝑋)) → {0,1}： 在评估点 𝑧 上打开对于 𝑦 的承诺 
 
    - 𝑃𝑟𝑜𝑣𝑒 (𝑐𝑘, 𝐶, 𝑧, 𝑦; 𝑓(𝑋)) → $𝜋$ 
@@ -135,7 +128,8 @@ KZG承诺是一个密码学技术，大致原理如下：
      - 商多项式 𝑞(𝑋) = $\frac{𝑓(𝑋)−𝑦}{ 𝑋−𝑧}$ , 𝜋 = 𝐶𝑜𝑚𝑚𝑖𝑡 (𝑐𝑘; 𝑞(𝑋)) = $[𝑞(𝛼)]_1$ 
 
        > 商多项式：多项式/多项式 仍 = 合法多项式（不含有余数等等）。即通过验证商多项式是有效的，论证已得到了正确解，例如：
-       > <img width="387" alt="image" src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/58cae40c-6922-48f4-af00-8f7bbb26bb42">
+       
+       <img width="387" alt="image" src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/58cae40c-6922-48f4-af00-8f7bbb26bb42">
 
 
    - 𝑉𝑒𝑟𝑖𝑓𝑦 (𝑣𝑘, 𝐶, 𝑧, 𝑦, 𝜋) → {0,1}
@@ -144,4 +138,4 @@ KZG承诺是一个密码学技术，大致原理如下：
 
        > e：双线性映射，常数复杂度，所以验证是十分快速的
 
-*注：circom中的约束到上述这些公式中的参数，非直观一一对应，被打散到了多项式里，中间还包含**算术化**（见下章）的过程*
+*注：circom中的约束到上述这些公式中的参数，非直观一一对应，被打散到了多项式里，中间还包含**算术化**（详见算术化章节）的过程*

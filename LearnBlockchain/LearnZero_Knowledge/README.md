@@ -27,3 +27,13 @@ ZK是密码学的一个分支，是一种证明方法，也可以称为技术。
   4. 应用ZK结构
   5. 应用ZK实例分析
 
+
+
+> 附录：👨‍🎓由浅入深学习零知识证明资料推荐
+
+- [安比实验室零知识证明小白入门](https://www.zhihu.com/question/265112868/answer/891098212)；
+- [安比实验室的工作，介绍从0到1实现Pinocchio算法](https://zhuanlan.zhihu.com/p/99260386)，著名的Groth16算法的前身，从Pinocchio算法了解如何实现一个ZKP系统；
+- [ZK-Learning Mooc 课程](https://zk-learning.org/)，大牛视频授课(Youtube & B站)，覆盖了需要了解的数学知识以及ZKP系统构造；
+- [UCBerkeley的菲尔兹奖得主 Richard Borcherds 录的数论课程](https://www.youtube.com/playlist?app=desktop&list=PL8yHsr3EFj53L8sMbzIhhXSAOpuZ1Fov8)，深入学习零知识证明所需数学知识；
+- ["Proof, Argument and Zero-knowledge" ](https://people.cs.georgetown.edu/jthaler/ProofsArgsAndZK.pdf)书籍，学术硬核，深入学习零知识证明算法实现；
+- 研读零知识证明的各种构造论文……

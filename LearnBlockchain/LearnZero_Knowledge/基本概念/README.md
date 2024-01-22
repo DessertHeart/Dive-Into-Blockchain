@@ -52,5 +52,7 @@
    >
    > 进阶：Schnorr签名方案，一个经典的**Sigma协议**(见承诺方案章节)，具有Special Honest-Verifier Zero-knowledge property
 
-<img src="/Users/dazso/Library/Application Support/typora-user-images/image-20240122165438816.png" alt="image-20240122165438816" style="zoom:50%;" />
+<div align=center>
+<img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/c01c0228-f0d7-4dbd-be7d-90b7c8c098f6" style="width:65%;">
+</div>
 

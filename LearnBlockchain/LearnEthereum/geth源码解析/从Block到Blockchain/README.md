@@ -122,8 +122,10 @@ type BlockChain struct {
     > staking赛道解决方案：分布式验证者 (Distributed Validators, DV) 是一种将单个验证者/节点的职责被分给几个共同验证者/节点 (co-validator)，应用[BLS 签名方案](https://www.ethereum.cn/Eth2/distributed-validator-specs)以提高与在一个单一机器上运行一个验证者客户端相比的韧性 (安全性、活性，或两者兼有)。如[Obol Network](https://mirror.xyz/bitcoinorange.eth/gyXAG1neqkm7nBCNFk77wLd5llZIFoVk3eqezI-wPZI)
     
     > 一个验证者节点上可以运行多个验证者Validator，在本地keystore文件中保存多个密钥对即可
+  
+
     <div align=center>
-    <img src="https://ethereum.org/static/8b68c1825d524f8102b5e58574824c77/e0885/validator-key-schematic.png" style="width:65%;">
+    <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/9f201f1f-dd00-4acf-887e-f464338c4f8c" style="width:50%;">
     </div>
     
     > 很多validator都会跑一个backup，因为validator不能下线。如果主程序和backup都跑的话，是会出现发送两个attestation的这个情况（如一个epoch发送两个attestation），该情况是没有办法从protocol层面限制的，因为attestation发送出去，是让不同的人收集的，只要验证者签名合法的，就会被其他人收集起来，其他人没有能力判断发送的attestation是否重复

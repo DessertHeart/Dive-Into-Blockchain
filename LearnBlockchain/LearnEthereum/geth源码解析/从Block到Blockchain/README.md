@@ -110,7 +110,8 @@ type BlockChain struct {
 
   - 第一步，如果所有活跃验证者质押的 ETH 余额中至少有 2/3 (即“绝对多数”) 证明了**最近的两个检查点**(当前的被称为“目标检查点”，前一个被称为“源检查点”)，那么这两个检查点之间的这段区块就被认定为 “合理化” (justified) 。
 
-  - 第二步，一旦某个被“合理化”的检查点之后新出现了另一个被“合理化”的检查点，那么前一个检查点就是 “敲定” (finalized) 。在这个检查点之前的所有区块/记录都成为了区块链上永久不可篡改的记录。
+  - 第二步，一旦某个被“合理化”的检查点之后新出现了另一个被“合理化”的检查点，那么前一个检查点就是 “敲定” (finalized) 。finalized checkpoint 之间的所有 block 被标记为 finalized；finalized checkpoint 和 justified checkpoint 之间的所有 block 被标记为 justified；
+      > finalized block 不可被更改，除非至少有1/3的 effective balance 更改自己之前的票（Beacon chain slash 机制，validator 或者 proposer 发出自相矛盾的 message 会被 slash 掉，他们的balance 会被 burn 掉）。
 
 - **系统角色**
 

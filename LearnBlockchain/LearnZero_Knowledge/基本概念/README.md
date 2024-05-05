@@ -1,4 +1,4 @@
-# 零知识证明基本概念
+![image](https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/37c21de1-54e0-4b8f-a19c-877d30c55857)# 零知识证明基本概念
 
 ## 一、定义
 
@@ -6,14 +6,15 @@
 
 > **零知识证明，实际都是通过论证得出，而非严格的数学证明**
 >
-> 论证(有概率性)：利用论据（原因，例子，数据等），验证或支撑论点为真（无限接近100%）
+> 论证：利用论据（原因，例子，数据）等，验证论点为真（无限接近100%）。交互证明(Interactive Proof)在定义上是允许一个无效证明通过验证的可能性微小但非零概率，而论证即为计算可靠性问题的IP，允许存在不正确陈述的“证明”（需要非常大的算力才能找到）。以计算性问题为前提条件后，一个重要的优势是能够使用(多项式时间安全)的密码学原语。
 > 
 > 证明：从空条件集合出发，利用假设法、公理、公设，来证明一个命题的恒为真，每个过程都要详细，确信的100%
 
 <div align=center>
 <img src="https://github.com/DessertHeart/Dive-Into-Blockchain/assets/93460127/0c0401f8-31b6-4310-b7eb-97dfae251532" style="width:65%;">
 </div>
-**定义**：零知识证明（ZKP, Zero-Knowledge Proof）是**一方（证明者Prover）向另一方（检验者Verifier）论证某命题的方法**。零知识协议是一种协议，它允许你证明你知道一些特定的数学事实，而无需透露有关事实本身的任何信息。在零知识协议中生成的证明称为零知识证明。
+
+**定义** :零知识证明（ZKP, Zero-Knowledge Proof）是**一方（证明者Prover）向另一方（检验者Verifier）论证某命题的方法**。零知识协议是一种协议，它允许你证明你知道一些特定的数学事实，而无需透露有关事实本身的任何信息。在零知识协议中生成的证明称为零知识证明。
 
 - 完备性(completeness)：如果 Prover 知道正确的具体信息，他们总是能够做出令人满意的回答；
 
@@ -33,8 +34,6 @@
 > 典型不可计算问题-停机问题：给定 $α$ 和 $x$ ，判定 $M_α$ 在输入为 $x$ 时是否会在有限步内停机。
 
 ## 二、现代零知识的特点
-
-<img src="https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/wps/auth_code/?code=82de9d5f4428159d4a6f579c11bcc786_69da6b6f289b2a29_6IQU4E33DO_FFCGMEJ48HO0UUR7A4RJ9DF270" alt="img" style="zoom: 50%;" />
 
 1. 为解决通用可计算问题，设计一个**通用框架将问题转化为一个可计算模型(computational model)**，然后利用零知识证明系统生成证明。在古典零知识证明中，对于像[三色图问题](https://www.jianshu.com/p/7b772e5cdaef)，研究人员（数学家）都必须提出一个应用于特定场合的特殊用途/特定的ZK协议，而在现代ZK零知识证明中，。
 
